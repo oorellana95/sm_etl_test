@@ -57,62 +57,50 @@ The RAW_interactions.csv dataset provides valuable insights into user interactio
 
 ---
 
-### File: PP_recipes.csv
-
-**Description:**
-
-The PP_recipes.csv describes recipes with token details about ingredients, preparation steps, and other attributes related to the recipes.
-
-**Attributes & Datatypes:**
-
-1. **id**: Integer
-2. **i**: Integer
-3. **name_tokens**: Array of Integers (Quotation marks around the entire array)
-4. **ingredient_tokens**: Array of Arrays of Integers (Quotation marks around the entire array)
-5. **steps_tokens**: Array of Integers (Quotation marks around the entire array)
-6. **techniques**: Array of Booleans (Quotation marks around the entire array)
-7. **calorie_level**: Integer (Always 0?)
-8. **ingredient_ids**: Array of Integers (Quotation marks around the entire array)
-
-**Formatting Considerations:**
-
-1. Each entry is separated by a line break.
-2. Each attribute within an entry is separated by a comma.
-3. Arrays, like "name_tokens", "ingredient_tokens", "steps_tokens", "techniques" and "ingredient_ids" are enclosed in quotation marks.
-
----
-
-### File: PP_users.csv
+### File: RAW_users.csv
 
 **Description**
 
-The PP_users.csv dataset appears to be related to some kind of recommendation system, where users are associated with certain techniques and items they have interacted with, and the ratings they have given to those items.
+The RAW_users.csv dataset contains diverse user profiles, including individuals with a wide range of ages, genders, and occupations. 
 
 **Attributes & Datatypes:**
 
-1. **u**: Integer
-2. **techniques**: Array of Integers (Quotation marks around the entire array)
-3. **items**: Array of Integers (Quotation marks around the entire array)
-4. **n_items**: Integer
-5. **ratings**: Array of Floats (Quotation marks around the entire array)
-6. **n_ratings**: Integer
+1. **user id**: Integer
+2. **encoded id**: String
+3. **first name**: String
+4. **Sex**: String (Male or Female)
+5. **email**: String (Email format)
+6. **phone**: String
+7. **date of birth**: Date
+8. **job title**: String
 
 **Formatting Considerations:**
 
 1. Each entry is separated by a line break.
 2. Each attribute within an entry is separated by a comma.
-3. Arrays, like "techniques", "items" and "ratings" are enclosed in quotation marks.
+3. Double quotation marks are used in some "job title" entries due to the presence of commas.
+4. Sex can only be Male or Female
+5. Phone has no specific format
+6. "job title" values seem to be predefined. It repeats across multiple users.
 
 ---
+
+user id,encoded id,first name,last name,Sex,email,phone,date of birth,job title
+1,4defE49671cF860,Sydney,Shannon,Male,tvang@example.net,574-440-1423x9799,2020-07-09,Technical brewer
+2,F89B87bCf8f210b,Regina,Lin,Male,helen14@example.net,001-273-664-2268x90121,1909-06-20,"Teacher, adult education"
+3,Cad6052BDd5DEaf,Pamela,Blake,Female,brent05@example.org,927-880-5785x85266,1964-08-19,Armed forces operational officer
+4,e83E46f80f629CD,Dave,Hoffman,Female,munozcraig@example.org,001-147-429-8340x608,2009-02-19,Ship broker
+5,60AAc4DcaBcE3b6,Ian,Campos,Female,brownevelyn@example.net,166-126-4390,1997-10-02,Media planner
+6,7ACb92d81A42fdf,Valerie,Patel,Male,muellerjoel@example.net,001-379-612-1298x853,2021-04-07,"Engineer, materials"
+
 
 ## Attribute considerations across the files 
 
 **id_recipe**
 - File RAW_recipes: id
 - File RAW_interactions: recipe_id
-- File PP_recipes: id
-- File PP_users: items[i]
 
-**ingredients**
-RAW_recipes: ingredients[x] -> Ingredient's name
-PP_recipes: ingredient_ids[x] -> Ingredient's id
+**id_user**
+- File RAW_users.csv: user id
+- File RAW_interactions.csv: user_id
+- File RAW_recipes.csv: contributor_id
