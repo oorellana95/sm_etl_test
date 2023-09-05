@@ -1,0 +1,6 @@
+**/.DS_Store
+**/___pycache__/
+/.pytest_cache
+data_test/*.csv
+/.idea
+/venv
