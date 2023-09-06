@@ -1,4 +1,6 @@
 """SQLAlchemy Database."""
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -27,7 +29,8 @@ engine = create_engine(database_uri)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 
-def get_db():
+@contextmanager
+def create_database_session():
     """Get database local session"""
     db = SessionLocal()
     try:
@@ -36,5 +39,5 @@ def get_db():
         db.close()
 
 
-def create_db() -> None:
+def create_database_tables() -> None:
     Base.metadata.create_all(engine)
