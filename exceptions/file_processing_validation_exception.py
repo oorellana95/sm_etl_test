@@ -1,4 +1,4 @@
-"""Validation Exception Classes"""
+"""File Processing Validation Exception Classes"""
 from exceptions.sm_etl_test_exception import SmEtlTestException
 
 
@@ -30,6 +30,13 @@ class ColumnsNotFoundException(FileProcessingValidationException):
 
 
 class ColumnTypeException(FileProcessingValidationException):
+    def __init__(self, message, **kwargs):
+        super().__init__()
+        self.message = message
+        self.additional_information = kwargs
+
+
+class ArrayLengthMismatchControlNumberError(FileProcessingValidationException):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message
