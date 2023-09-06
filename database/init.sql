@@ -12,7 +12,7 @@ USE culinary_recipes_mysql;
 
 CREATE TABLE `job_title` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`name`)
 );
@@ -24,11 +24,11 @@ CREATE TABLE `job_title` (
 CREATE TABLE `user` (
   `id` int NOT NULL,
   `id_encoded` varchar(100) NOT NULL,
-  `first_name` varchar(80) NOT NULL,
-  `last_name` varchar(80) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
   `sex` enum('Male','Female') NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `phone` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(100) NOT NULL,
   `birthdate` date NOT NULL,
   `id_job_title` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -79,7 +79,7 @@ CREATE TABLE `rating` (
 
 CREATE TABLE `ingredient` (
   `id` int NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`name`)
 );
@@ -102,7 +102,7 @@ CREATE TABLE `recipe_ingredient` (
 
 CREATE TABLE `tag` (
   `id` int NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`name`)
 );
