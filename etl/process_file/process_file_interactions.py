@@ -28,5 +28,5 @@ class ProcessFileInteractions(ProcessFile):
                 value_type="int",
                 check_function=check_contains_all_valid_ranking_numbers,
             ),
-            ColumnChecker(name="review", value_type="str", check_function=None),
+            ColumnChecker(name="review", value_type="object", check_function=None),
         ]
