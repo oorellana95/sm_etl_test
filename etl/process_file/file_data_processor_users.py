@@ -5,7 +5,7 @@ Custom class inherited from the ProcessFile Class with the Interactions specific
 
 from etl.config import RAW_USERS_PATH
 from etl.process_file.column_checker import ColumnChecker
-from etl.process_file.process_file import ProcessFile
+from etl.process_file.file_data_processor import FileDataProcessor
 from etl.tools.validation_functions.general_functions import (
     contains_all_dates,
     contains_list_of_emails,
@@ -13,7 +13,7 @@ from etl.tools.validation_functions.general_functions import (
 )
 
 
-class ProcessFileUsers(ProcessFile):
+class FileDataProcessorUsers(FileDataProcessor):
     def __init__(self):
         super().__init__()
         self.file_type = "csv"

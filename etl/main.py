@@ -1,15 +1,15 @@
-from etl.process_file.process_file_interactions import ProcessFileInteractions
-from etl.process_file.process_file_recipes import ProcessFileRecipes
-from etl.process_file.process_file_users import ProcessFileUsers
+from etl.process_file.file_data_processor_interactions import FileDataProcessorInteractions
+from etl.process_file.file_data_processor_recipes import FileDataProcessorRecipes
+from etl.process_file.file_data_processor_users import FileDataProcessorUsers
 from etl.tools.logger import Logger
 from exceptions.sm_etl_test_exception import SmEtlTestException
 
 if __name__ == "__main__":
     # Improve the way of calling the items
     try:
-        interactions_data = ProcessFileInteractions().get_checked_data()
-        recipes_data = ProcessFileRecipes().get_checked_data()
-        users_data = ProcessFileUsers().get_checked_data()
+        interactions_data = FileDataProcessorInteractions().get_checked_data()
+        recipes_data = FileDataProcessorRecipes().get_checked_data()
+        users_data = FileDataProcessorUsers().get_checked_data()
         print("Hello World :)")
     except SmEtlTestException as e:
         Logger.error(

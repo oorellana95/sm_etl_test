@@ -15,7 +15,7 @@ from exceptions.file_processing_validation_exception import (
 )
 
 
-class ProcessFile(ABC):
+class FileDataProcessor(ABC):
     def __init__(self):
         self.column_checkers = None
         self.file_type = None
