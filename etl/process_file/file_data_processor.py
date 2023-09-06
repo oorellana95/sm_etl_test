@@ -6,6 +6,9 @@ from abc import ABC
 
 import pandas as pd
 
+from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
+    DatabaseLoadFileProcessingError,
+)
 from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
     ColumnsNotFoundError,
     ColumnTypeError,
@@ -52,7 +55,7 @@ class FileDataProcessor(ABC):
         """Checks if the dataframe has, at least, the expected structure and data types."""
         self._check_mandatory_columns()
         self._check_data_from_columns()
-        self._additional_checks()
+        self.additional_checks()
         Logger.info(f"All quality checks have passed for the file: {self.file_path}")
 
     def _check_mandatory_columns(self) -> None:
@@ -94,10 +97,19 @@ class FileDataProcessor(ABC):
                         file_path=f"{self.file_path}",
                     )
 
-    def _additional_checks(self) -> None:
+    def _load_data(self) -> None:
+        try:
+            self.load_data()
+        except Exception as e:
+            raise DatabaseLoadFileProcessingError(
+                message=f"An error occurred while loading data. {e}",
+                file_path=self.file_path,
+                database_url=self.db_session.bind.url,
+            )
+
+    def additional_checks(self) -> None:
         """Function to add additional checks."""
         pass
 
-    def _load_data(self) -> None:
-        """Function to load the data to the database."""
+    def load_data(self) -> None:
         pass

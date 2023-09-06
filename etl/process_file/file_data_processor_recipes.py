@@ -57,7 +57,7 @@ class FileDataProcessorRecipes(FileDataProcessor):
             ColumnChecker(name="n_ingredients", value_type="int"),
         ]
 
-    def _additional_checks(self) -> None:
+    def additional_checks(self) -> None:
         """Function to add additional checks."""
         try:
             check_array_str_lengths(

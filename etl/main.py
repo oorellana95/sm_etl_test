@@ -21,4 +21,3 @@ if __name__ == "__main__":
                 message=e,
                 code="UNCONTROLLED EXCEPTION",
             )
-
