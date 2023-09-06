@@ -9,6 +9,7 @@ from etl.exceptions.file_processing_exeptions.extract_validation_file_processing
 )
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
+from etl.repositories.unique_name_table import load_tags, load_ingredients
 from etl.tools.validation_functions.general_functions import (
     contains_all_dates,
     contains_list_of_floats,
@@ -75,3 +76,11 @@ class FileDataProcessorRecipes(FileDataProcessor):
                 message=e,
                 file_path=f"{self.file_path}",
             )
+
+    def load_data(self):
+        load_tags(
+            db_session=self.db_session, tags=self.data["tags"].unique()
+        )
+        load_ingredients(
+            db_session=self.db_session, ingredients=self.data["ingredients"].unique()
+        )
