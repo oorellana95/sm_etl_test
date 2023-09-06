@@ -51,6 +51,7 @@ class ProcessFile(ABC):
         """Checks if the dataframe has the expected structure and data types."""
         self._check_mandatory_columns()
         self._check_data_from_columns()
+        self._additional_checks()
         Logger.info(f"All quality checks have passed for the file: {self.file_path}")
 
     def _check_mandatory_columns(self) -> None:
@@ -59,11 +60,16 @@ class ProcessFile(ABC):
         current_columns = set(self.data.columns)
 
         if mandatory_columns != current_columns:
-            missing_mandatory_columns = current_columns - mandatory_columns
-            raise ColumnsNotFoundException(
-                message=f"Missing columns: {missing_mandatory_columns}. They are mandatory",
-                file_path=f"{self.file_path}",
-            )
+            missing_mandatory_columns = mandatory_columns - current_columns
+            if missing_mandatory_columns:
+                raise ColumnsNotFoundException(
+                    message=f"Missing columns: {missing_mandatory_columns}. They are mandatory",
+                    file_path=f"{self.file_path}",
+                )
+            else:
+                Logger.warning(
+                    f"The file {self.file_path} has more columns than expected. The additional columns are: {current_columns - mandatory_columns}"
+                )
 
     def _check_data_from_columns(self) -> None:
         """Raise an input validation error if there are column types not expected."""
@@ -75,7 +81,7 @@ class ProcessFile(ABC):
             if not is_same_type:
                 raise ColumnTypeException(
                     message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
-                    f"But is of type: {df_column.dtype}",
+                            f"But is of type: {df_column.dtype}",
                     file_path=f"{self.file_path}",
                 )
             if column_checker.check_function:
@@ -86,3 +92,6 @@ class ProcessFile(ABC):
                         message=f"From column {column_checker.name}. {e}",
                         file_path=f"{self.file_path}",
                     )
+
+    def _additional_checks(self) -> None:
+        pass

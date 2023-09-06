@@ -2,9 +2,9 @@ from etl.config import RAW_RECIPES_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.process_file import ProcessFile
 from etl.tools.validation_functions import (
-    check_contains_all_date,
-    check_contains_list_of_floats,
-    check_contains_list_of_strings,
+    contains_all_dates,
+    contains_list_of_floats,
+    contains_list_of_strings,
 )
 
 
@@ -21,29 +21,29 @@ class ProcessFileRecipes(ProcessFile):
             ColumnChecker(
                 name="submitted",
                 value_type="object",
-                check_function=check_contains_all_date,
+                check_function=contains_all_dates,
             ),
             ColumnChecker(
                 name="tags",
                 value_type="object",
-                check_function=check_contains_list_of_strings,
+                check_function=contains_list_of_strings,
             ),
             ColumnChecker(
                 name="nutrition",
                 value_type="object",
-                check_function=check_contains_list_of_floats,
+                check_function=contains_list_of_floats,
             ),
             ColumnChecker(name="n_steps", value_type="int", check_function=None),
             ColumnChecker(
                 name="steps",
                 value_type="object",
-                check_function=check_contains_list_of_strings,
+                check_function=contains_list_of_strings,
             ),
             ColumnChecker(name="description", value_type="object", check_function=None),
             ColumnChecker(
                 name="ingredients",
                 value_type="object",
-                check_function=check_contains_list_of_strings,
+                check_function=contains_list_of_strings,
             ),
             ColumnChecker(name="n_ingredients", value_type="int", check_function=None),
         ]

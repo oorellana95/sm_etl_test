@@ -3,9 +3,10 @@ Validation functions:
 The functions are all meant to check specific type of data. They can expect a list or just a single value.
 """
 import datetime
+import re
 
 
-def check_is_date(single_date_str: str):
+def is_date(single_date_str: str):
     """Check if the value is a date. Format YYYY-MM-DD."""
     try:
         datetime.datetime.strptime(single_date_str, "%Y-%m-%d")
@@ -13,13 +14,13 @@ def check_is_date(single_date_str: str):
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
 
 
-def check_contains_all_date(list_dates_str: list):
+def contains_all_dates(list_dates_str: list):
     """Check if the list of values are dates. Format YYYY-MM-DD."""
     for value in list_dates_str:
-        check_is_date(value)
+        is_date(value)
 
 
-def check_contains_all_valid_ranking_numbers(list_integers: list):
+def contains_all_valid_ranking_numbers(list_integers: list):
     """Check if the list of values are in between the ranking range 0-5."""
     min_ranking_value, max_ranking_value = 0, 5
     if min(list_integers) < min_ranking_value or max(list_integers) > max_ranking_value:
@@ -28,7 +29,7 @@ def check_contains_all_valid_ranking_numbers(list_integers: list):
         )
 
 
-def check_is_list_of_strings(single_str_arr_str: list):
+def is_list_of_strings(single_str_arr_str: list):
     try:
         parsed_list = eval(single_str_arr_str)
         if not isinstance(parsed_list, list) or not all(
@@ -43,12 +44,12 @@ def check_is_list_of_strings(single_str_arr_str: list):
         )
 
 
-def check_contains_list_of_strings(list_strings: list):
+def contains_list_of_strings(list_strings: list):
     for value in list_strings:
-        check_is_list_of_strings(value)
+        is_list_of_strings(value)
 
 
-def check_is_list_of_floats(single_str_arr_float: list):
+def is_list_of_floats(single_str_arr_float: list):
     try:
         parsed_list = eval(single_str_arr_float)
         if not isinstance(parsed_list, list) or not all(
@@ -59,10 +60,33 @@ def check_is_list_of_floats(single_str_arr_float: list):
             )
     except (ValueError, SyntaxError):
         raise ValueError(
-            f"Incorrect value, should be a list of floats: '{single_string}'"
+            f"Incorrect value, should be a list of floats: '{single_str_arr_float}'"
         )
 
 
-def check_contains_list_of_floats(list_strings: list):
+def contains_list_of_floats(list_strings: list):
     for value in list_strings:
-        check_is_list_of_floats(value)
+        is_list_of_floats(value)
+
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    if re.match(pattern, email):
+        return
+    raise ValueError("Incorrect data format, should be a valid email")
+
+
+def contains_list_of_emails(list_emails: list):
+    for email in list_emails:
+        is_valid_email(email)
+
+
+def is_valid_sex(sex):
+    if sex.lower() in ("male", "female"):
+        return
+    raise ValueError("Incorrect data format, should be a valid sex (male or female)")
+
+
+def contains_list_of_sex_values(sex_values: list):
+    for sex in sex_values:
+        is_valid_sex(sex)
