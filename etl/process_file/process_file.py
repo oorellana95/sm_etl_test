@@ -22,7 +22,7 @@ class ProcessFile(ABC):
         self.file_path = None
         self.data = None
 
-    def get_data(self):
+    def get_data(self) -> pd.DataFrame:
         """Retrieves the data from different types of files to a pandas dataframe."""
         if self.file_type == "xlsx" or self.file_type == "xls":
             self.data = pd.read_excel(self.file_path)
@@ -39,7 +39,7 @@ class ProcessFile(ABC):
         Logger.info(f"Data retrieved correctly from the file {self.file_path}")
         return self.data
 
-    def get_checked_data(self):
+    def get_checked_data(self) -> pd.DataFrame:
         """Returns the data with all checks passed"""
         if self.data is None:
             self.get_data()
@@ -81,7 +81,7 @@ class ProcessFile(ABC):
             if not is_same_type:
                 raise ColumnTypeException(
                     message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
-                            f"But is of type: {df_column.dtype}",
+                    f"But is of type: {df_column.dtype}",
                     file_path=f"{self.file_path}",
                 )
             if column_checker.check_function:
@@ -94,4 +94,5 @@ class ProcessFile(ABC):
                     )
 
     def _additional_checks(self) -> None:
+        """Function to add additional checks."""
         pass

@@ -1,7 +1,12 @@
+"""
+ProcessFileUsers Class
+Custom class inherited from the ProcessFile Class with the Interactions specifications to process the file.
+"""
+
 from etl.config import RAW_USERS_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.process_file import ProcessFile
-from etl.tools.validation_functions import (
+from etl.tools.validation_functions.general_functions import (
     contains_all_dates,
     contains_list_of_emails,
     contains_list_of_sex_values,
