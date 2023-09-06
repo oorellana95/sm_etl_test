@@ -22,10 +22,7 @@ def check_contains_all_date(list_dates_str: list):
 def check_contains_all_valid_ranking_numbers(list_integers: list):
     """Check if the list of values are in between the ranking range 0-5."""
     min_ranking_value, max_ranking_value = 0, 5
-    if (
-        min(list_integers) < min_ranking_value
-        or max(list_integers) > max_ranking_value
-    ):
+    if min(list_integers) < min_ranking_value or max(list_integers) > max_ranking_value:
         raise ValueError(
             f"Incorrect value, should be between {min_ranking_value} and {max_ranking_value}"
         )
@@ -34,10 +31,16 @@ def check_contains_all_valid_ranking_numbers(list_integers: list):
 def check_is_list_of_strings(single_str_arr_str: list):
     try:
         parsed_list = eval(single_str_arr_str)
-        if not isinstance(parsed_list, list) or not all(isinstance(item, str) for item in parsed_list):
-            raise ValueError(f"The value '{single_str_arr_str}' is not a list of strings.")
+        if not isinstance(parsed_list, list) or not all(
+            isinstance(item, str) for item in parsed_list
+        ):
+            raise ValueError(
+                f"The value '{single_str_arr_str}' is not a list of strings."
+            )
     except (ValueError, SyntaxError):
-        raise ValueError(f"Incorrect value, should be a list of strings: '{single_str_arr_str}'")
+        raise ValueError(
+            f"Incorrect value, should be a list of strings: '{single_str_arr_str}'"
+        )
 
 
 def check_contains_list_of_strings(list_strings: list):
@@ -48,10 +51,16 @@ def check_contains_list_of_strings(list_strings: list):
 def check_is_list_of_floats(single_str_arr_float: list):
     try:
         parsed_list = eval(single_str_arr_float)
-        if not isinstance(parsed_list, list) or not all(isinstance(item, float) for item in parsed_list):
-            raise ValueError(f"The value '{single_str_arr_float}' is not a list of floats.")
+        if not isinstance(parsed_list, list) or not all(
+            isinstance(item, float) for item in parsed_list
+        ):
+            raise ValueError(
+                f"The value '{single_str_arr_float}' is not a list of floats."
+            )
     except (ValueError, SyntaxError):
-        raise ValueError(f"Incorrect value, should be a list of floats: '{single_string}'")
+        raise ValueError(
+            f"Incorrect value, should be a list of floats: '{single_string}'"
+        )
 
 
 def check_contains_list_of_floats(list_strings: list):
