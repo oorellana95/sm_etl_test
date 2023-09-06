@@ -13,8 +13,8 @@ from etl.tools.validation_functions.general_functions import (
 
 
 class FileDataProcessorInteractions(FileDataProcessor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, db_session):
+        super().__init__(db_session)
         self.file_type = "csv"
         self.file_path = RAW_INTERACTIONS_PATH
         self.column_checkers = [

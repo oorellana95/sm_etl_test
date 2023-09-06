@@ -1,42 +1,44 @@
 """File Processing Validation Exception Classes"""
-from etl.exceptions.sm_etl_test_exception import SmEtlTestException
+from etl.exceptions.file_processing_exeptions.file_processing_error import (
+    FileProcessingError,
+)
 
 
-class FileProcessingValidationException(SmEtlTestException):
+class ExtractValidationFileProcessingError(FileProcessingError):
     def __init__(self):
         super().__init__()
-        self.code = "ERROR.FILE_PROCESSING_VALIDATION"
+        self.code = f"{self.code}.EXTRACT_VALIDATION"
 
 
-class FileFormatNotAccepted(FileProcessingValidationException):
+class FileFormatNotAcceptedError(ExtractValidationFileProcessingError):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message
         self.additional_information = kwargs
 
 
-class FileIsEmpty(FileProcessingValidationException):
+class FileIsEmptyError(ExtractValidationFileProcessingError):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message
         self.additional_information = kwargs
 
 
-class ColumnsNotFoundException(FileProcessingValidationException):
+class ColumnsNotFoundError(ExtractValidationFileProcessingError):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message
         self.additional_information = kwargs
 
 
-class ColumnTypeException(FileProcessingValidationException):
+class ColumnTypeError(ExtractValidationFileProcessingError):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message
         self.additional_information = kwargs
 
 
-class ArrayLengthMismatchControlNumberError(FileProcessingValidationException):
+class ArrayLengthMismatchControlNumberError(ExtractValidationFileProcessingError):
     def __init__(self, message, **kwargs):
         super().__init__()
         self.message = message

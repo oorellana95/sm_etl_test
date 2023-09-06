@@ -4,7 +4,7 @@ Custom class inherited from the ProcessFile Class with the Interactions specific
 """
 
 from etl.config import RAW_RECIPES_PATH
-from etl.exceptions.file_processing_validation_exception import (
+from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
     ArrayLengthMismatchControlNumberError,
 )
 from etl.process_file.column_checker import ColumnChecker
@@ -18,8 +18,8 @@ from etl.tools.validation_functions.pandas_functions import check_array_str_leng
 
 
 class FileDataProcessorRecipes(FileDataProcessor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, db_session):
+        super().__init__(db_session)
         self.file_type = "csv"
         self.file_path = RAW_RECIPES_PATH
         self.column_checkers = [

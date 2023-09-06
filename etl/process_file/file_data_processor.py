@@ -6,42 +6,45 @@ from abc import ABC
 
 import pandas as pd
 
-from etl.exceptions.file_processing_validation_exception import (
-    ColumnsNotFoundException,
-    ColumnTypeException,
-    FileFormatNotAccepted,
-    FileIsEmpty,
+from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
+    ColumnsNotFoundError,
+    ColumnTypeError,
+    FileFormatNotAcceptedError,
+    FileIsEmptyError,
 )
 from etl.services.logger import Logger
 
 
 class FileDataProcessor(ABC):
-    def __init__(self):
+    def __init__(self, db_session):
+        self.db_session = db_session
         self.column_checkers = None
         self.file_type = None
         self.file_path = None
         self.data = None
 
     def execute(self):
-        """Load, check and process the data."""
+        """Extract, check and loads the data to the database."""
+        self._extract_data()
+        # self._check_data()
         self._load_data()
-        self._check_data()
-        self._process_data()
 
-    def _load_data(self) -> pd.DataFrame:
-        """Load the data from different types of files to a pandas dataframe."""
+    def _extract_data(self) -> pd.DataFrame:
+        """Extracts the data from different types of files and returns a pandas dataframe."""
         if self.file_type == "xlsx" or self.file_type == "xls":
             self.data = pd.read_excel(self.file_path)
         elif self.file_type == "csv":
             self.data = pd.read_csv(self.file_path)
         else:
-            raise FileFormatNotAccepted(
+            raise FileFormatNotAcceptedError(
                 message=f"File format not accepted: {self.file_type}. Only accepted CSV, XLSX and XLS formats",
                 file_path=f"{self.file_path}",
             )
 
         if self.data is None:
-            raise FileIsEmpty(message=f"File is empty", file_path=f"{self.file_path}")
+            raise FileIsEmptyError(
+                message=f"File is empty", file_path=f"{self.file_path}"
+            )
         Logger.info(f"Data retrieved correctly from the file {self.file_path}")
         return self.data
 
@@ -60,7 +63,7 @@ class FileDataProcessor(ABC):
         if mandatory_columns != current_columns:
             missing_mandatory_columns = mandatory_columns - current_columns
             if missing_mandatory_columns:
-                raise ColumnsNotFoundException(
+                raise ColumnsNotFoundError(
                     message=f"Missing columns: {missing_mandatory_columns}. They are mandatory",
                     file_path=f"{self.file_path}",
                 )
@@ -77,7 +80,7 @@ class FileDataProcessor(ABC):
                 column_checker.value_type, df_column.dtype
             )
             if not is_same_type:
-                raise ColumnTypeException(
+                raise ColumnTypeError(
                     message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
                     f"But is of type: {df_column.dtype}",
                     file_path=f"{self.file_path}",
@@ -86,7 +89,7 @@ class FileDataProcessor(ABC):
                 try:
                     column_checker.check_function(df_column)
                 except ValueError as e:
-                    raise ColumnTypeException(
+                    raise ColumnTypeError(
                         message=f"From column {column_checker.name}. {e}",
                         file_path=f"{self.file_path}",
                     )
@@ -95,6 +98,6 @@ class FileDataProcessor(ABC):
         """Function to add additional checks."""
         pass
 
-    def _process_data(self) -> None:
-        """Function to process the data."""
+    def _load_data(self) -> None:
+        """Function to load the data to the database."""
         pass
