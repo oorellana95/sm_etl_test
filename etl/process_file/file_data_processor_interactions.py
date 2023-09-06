@@ -18,8 +18,8 @@ class FileDataProcessorInteractions(FileDataProcessor):
         self.file_type = "csv"
         self.file_path = RAW_INTERACTIONS_PATH
         self.column_checkers = [
-            ColumnChecker(name="user_id", value_type="int", check_function=None),
-            ColumnChecker(name="recipe_id", value_type="int", check_function=None),
+            ColumnChecker(name="user_id", value_type="int"),
+            ColumnChecker(name="recipe_id", value_type="int"),
             ColumnChecker(
                 name="date", value_type="object", check_function=contains_all_dates
             ),

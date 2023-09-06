@@ -23,10 +23,10 @@ class FileDataProcessorRecipes(FileDataProcessor):
         self.file_type = "csv"
         self.file_path = RAW_RECIPES_PATH
         self.column_checkers = [
-            ColumnChecker(name="name", value_type="object", check_function=None),
-            ColumnChecker(name="id", value_type="int", check_function=None),
-            ColumnChecker(name="minutes", value_type="int", check_function=None),
-            ColumnChecker(name="contributor_id", value_type="int", check_function=None),
+            ColumnChecker(name="name", value_type="object"),
+            ColumnChecker(name="id", value_type="int"),
+            ColumnChecker(name="minutes", value_type="int"),
+            ColumnChecker(name="contributor_id", value_type="int"),
             ColumnChecker(
                 name="submitted",
                 value_type="object",
@@ -42,19 +42,19 @@ class FileDataProcessorRecipes(FileDataProcessor):
                 value_type="object",
                 check_function=contains_list_of_floats,
             ),
-            ColumnChecker(name="n_steps", value_type="int", check_function=None),
+            ColumnChecker(name="n_steps", value_type="int"),
             ColumnChecker(
                 name="steps",
                 value_type="object",
                 check_function=contains_list_of_strings,
             ),
-            ColumnChecker(name="description", value_type="object", check_function=None),
+            ColumnChecker(name="description", value_type="object"),
             ColumnChecker(
                 name="ingredients",
                 value_type="object",
                 check_function=contains_list_of_strings,
             ),
-            ColumnChecker(name="n_ingredients", value_type="int", check_function=None),
+            ColumnChecker(name="n_ingredients", value_type="int"),
         ]
 
     def _additional_checks(self) -> None:

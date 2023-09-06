@@ -12,7 +12,7 @@ from etl.exceptions.file_processing_validation_exception import (
     FileFormatNotAccepted,
     FileIsEmpty,
 )
-from etl.tools.logger import Logger
+from etl.services.logger import Logger
 
 
 class FileDataProcessor(ABC):

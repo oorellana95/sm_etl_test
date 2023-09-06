@@ -19,10 +19,10 @@ class FileDataProcessorUsers(FileDataProcessor):
         self.file_type = "csv"
         self.file_path = RAW_USERS_PATH
         self.column_checkers = [
-            ColumnChecker(name="user id", value_type="int", check_function=None),
-            ColumnChecker(name="encoded id", value_type="object", check_function=None),
-            ColumnChecker(name="first name", value_type="object", check_function=None),
-            ColumnChecker(name="last name", value_type="object", check_function=None),
+            ColumnChecker(name="user id", value_type="int"),
+            ColumnChecker(name="encoded id", value_type="object"),
+            ColumnChecker(name="first name", value_type="object"),
+            ColumnChecker(name="last name", value_type="object"),
             ColumnChecker(
                 name="Sex",
                 value_type="object",
@@ -33,11 +33,11 @@ class FileDataProcessorUsers(FileDataProcessor):
                 value_type="object",
                 check_function=contains_list_of_emails,
             ),
-            ColumnChecker(name="phone", value_type="object", check_function=None),
+            ColumnChecker(name="phone", value_type="object"),
             ColumnChecker(
                 name="date of birth",
                 value_type="object",
                 check_function=contains_all_dates,
             ),
-            ColumnChecker(name="job title", value_type="object", check_function=None),
+            ColumnChecker(name="job title", value_type="object"),
         ]
