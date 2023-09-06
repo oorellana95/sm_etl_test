@@ -1,16 +1,15 @@
-# This is a sample Python script.
+from etl.process_file.process_file_interactions import ProcessFileInteractions
+from etl.tools.logger import Logger
+from exceptions.sm_etl_test_exception import SmEtlTestException
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f"Hi, {name}")  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == "__main__":
-    print_hi("PyCharm")
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Improve the way of calling the items
+    try:
+        interactions_data = ProcessFileInteractions().get_checked_data()
+        print("Hello World :)")
+    except SmEtlTestException as e:
+        Logger.error(
+            message=e.message,
+            code=e.code,
+            additional_information=e.additional_information,
+        )
