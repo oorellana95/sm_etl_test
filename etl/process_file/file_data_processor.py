@@ -6,13 +6,13 @@ from abc import ABC
 
 import pandas as pd
 
-from etl.tools.logger import Logger
-from exceptions.file_processing_validation_exception import (
+from etl.exceptions.file_processing_validation_exception import (
     ColumnsNotFoundException,
     ColumnTypeException,
     FileFormatNotAccepted,
     FileIsEmpty,
 )
+from etl.tools.logger import Logger
 
 
 class FileDataProcessor(ABC):
@@ -79,7 +79,7 @@ class FileDataProcessor(ABC):
             if not is_same_type:
                 raise ColumnTypeException(
                     message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
-                            f"But is of type: {df_column.dtype}",
+                    f"But is of type: {df_column.dtype}",
                     file_path=f"{self.file_path}",
                 )
             if column_checker.check_function:

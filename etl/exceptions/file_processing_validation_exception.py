@@ -1,5 +1,5 @@
 """File Processing Validation Exception Classes"""
-from exceptions.sm_etl_test_exception import SmEtlTestException
+from etl.exceptions.sm_etl_test_exception import SmEtlTestException
 
 
 class FileProcessingValidationException(SmEtlTestException):

@@ -1,4 +1,6 @@
-from etl.process_file.file_data_processor_interactions import FileDataProcessorInteractions
+from etl.process_file.file_data_processor_interactions import (
+    FileDataProcessorInteractions,
+)
 from etl.process_file.file_data_processor_recipes import FileDataProcessorRecipes
 from etl.process_file.file_data_processor_users import FileDataProcessorUsers
 from etl.tools.logger import Logger

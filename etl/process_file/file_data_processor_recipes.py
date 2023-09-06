@@ -4,6 +4,9 @@ Custom class inherited from the ProcessFile Class with the Interactions specific
 """
 
 from etl.config import RAW_RECIPES_PATH
+from etl.exceptions.file_processing_validation_exception import (
+    ArrayLengthMismatchControlNumberError,
+)
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.tools.validation_functions.general_functions import (
@@ -12,9 +15,6 @@ from etl.tools.validation_functions.general_functions import (
     contains_list_of_strings,
 )
 from etl.tools.validation_functions.pandas_functions import check_array_str_lengths
-from exceptions.file_processing_validation_exception import (
-    ArrayLengthMismatchControlNumberError,
-)
 
 
 class FileDataProcessorRecipes(FileDataProcessor):
