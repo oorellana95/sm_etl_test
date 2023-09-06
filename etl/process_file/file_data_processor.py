@@ -22,8 +22,14 @@ class FileDataProcessor(ABC):
         self.file_path = None
         self.data = None
 
-    def get_data(self) -> pd.DataFrame:
-        """Retrieves the data from different types of files to a pandas dataframe."""
+    def execute(self):
+        """Load, check and process the data."""
+        self._load_data()
+        self._check_data()
+        self._process_data()
+
+    def _load_data(self) -> pd.DataFrame:
+        """Load the data from different types of files to a pandas dataframe."""
         if self.file_type == "xlsx" or self.file_type == "xls":
             self.data = pd.read_excel(self.file_path)
         elif self.file_type == "csv":
@@ -39,16 +45,8 @@ class FileDataProcessor(ABC):
         Logger.info(f"Data retrieved correctly from the file {self.file_path}")
         return self.data
 
-    def get_checked_data(self) -> pd.DataFrame:
-        """Returns the data with all checks passed"""
-        if self.data is None:
-            self.get_data()
-
-        self._check_data_quality()
-        return self.data
-
-    def _check_data_quality(self) -> None:
-        """Checks if the dataframe has the expected structure and data types."""
+    def _check_data(self) -> None:
+        """Checks if the dataframe has, at least, the expected structure and data types."""
         self._check_mandatory_columns()
         self._check_data_from_columns()
         self._additional_checks()
@@ -81,7 +79,7 @@ class FileDataProcessor(ABC):
             if not is_same_type:
                 raise ColumnTypeException(
                     message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
-                    f"But is of type: {df_column.dtype}",
+                            f"But is of type: {df_column.dtype}",
                     file_path=f"{self.file_path}",
                 )
             if column_checker.check_function:
@@ -95,4 +93,8 @@ class FileDataProcessor(ABC):
 
     def _additional_checks(self) -> None:
         """Function to add additional checks."""
+        pass
+
+    def _process_data(self) -> None:
+        """Function to process the data."""
         pass
