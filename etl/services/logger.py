@@ -1,10 +1,12 @@
 """Logger Class"""
 import logging
 
+from etl.config import PROJECT_NAME, SERVICE_NAME
+
 
 class Logger:
-    _project = "sm_etl_test"
-    _service = "ETL Service"
+    _project = PROJECT_NAME
+    _service = SERVICE_NAME
     _logger = logging.getLogger(__name__)
 
     def __new__(cls):
