@@ -11,9 +11,10 @@ USE culinary_recipes_mysql;
 --
 
 CREATE TABLE `job_title` (
-  `id` bigint NOT NULL,
-  `name` varchar(80) NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`name`)
 );
 
 --
@@ -21,15 +22,15 @@ CREATE TABLE `job_title` (
 --
 
 CREATE TABLE `user` (
-  `id` bigint NOT NULL,
+  `id` int NOT NULL,
   `id_encoded` varchar(100) NOT NULL,
-  `first_name` varchar(100) NOT NULL,
-  `last_name` varchar(100) NOT NULL,
+  `first_name` varchar(80) NOT NULL,
+  `last_name` varchar(80) NOT NULL,
   `sex` enum('Male','Female') NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(100) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone` varchar(50) NOT NULL,
   `birthdate` date NOT NULL,
-  `id_job_title` bigint NOT NULL,
+  `id_job_title` int NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `user_fk_1` FOREIGN KEY (`id_job_title`) REFERENCES `job_title` (`id`)
 );
@@ -39,16 +40,16 @@ CREATE TABLE `user` (
 --
 
 CREATE TABLE `recipe` (
-  `id` bigint NOT NULL,
-  `id_user` bigint NOT NULL,
+  `id` int NOT NULL,
+  `id_user` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `minutes` int NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `steps` json DEFAULT NULL,
-  `nutrition` json DEFAULT NULL,
+  `description` text,
+  `steps` json NOT NULL,
+  `nutrition` json NOT NULL,
   `calorie_level` int NOT NULL,
-  `submitted_at` datetime NOT NULL,
-  `last_updated` datetime NOT NULL,
+  `submitted_at` date NOT NULL,
+  `last_updated` date NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `recipe_fk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
   CONSTRAINT `recipe_chk_1` CHECK (0<=`calorie_level` AND `calorie_level`<=2)
@@ -59,9 +60,9 @@ CREATE TABLE `recipe` (
 --
 
 CREATE TABLE `rating` (
-  `id` bigint NOT NULL,
-  `id_user` bigint NOT NULL,
-  `id_recipe` bigint NOT NULL,
+  `id` int NOT NULL,
+  `id_user` int NOT NULL,
+  `id_recipe` int NOT NULL,
   `valuation` int NOT NULL,
   `review` varchar(255) DEFAULT NULL,
   `submitted_date` date NOT NULL,
@@ -77,9 +78,10 @@ CREATE TABLE `rating` (
 --
 
 CREATE TABLE `ingredient` (
-  `id` bigint NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`name`)
 );
 
 --
@@ -87,8 +89,8 @@ CREATE TABLE `ingredient` (
 --
 
 CREATE TABLE `recipe_ingredient` (
-  `id_recipe` bigint NOT NULL,
-  `id_ingredient` bigint NOT NULL,
+  `id_recipe` int NOT NULL,
+  `id_ingredient` int NOT NULL,
   PRIMARY KEY (`id_recipe`,`id_ingredient`),
   CONSTRAINT `recipe_ingredient_fk_1` FOREIGN KEY (`id_recipe`) REFERENCES `recipe` (`id`),
   CONSTRAINT `recipe_ingredient_fk_2` FOREIGN KEY (`id_ingredient`) REFERENCES `ingredient` (`id`)
@@ -99,9 +101,10 @@ CREATE TABLE `recipe_ingredient` (
 --
 
 CREATE TABLE `tag` (
-  `id` bigint NOT NULL,
-  `name` varchar(80) NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`name`)
 );
 
 --
@@ -109,8 +112,8 @@ CREATE TABLE `tag` (
 --
 
 CREATE TABLE `recipe_tag` (
-  `id_recipe` bigint NOT NULL,
-  `id_tag` bigint NOT NULL,
+  `id_recipe` int NOT NULL,
+  `id_tag` int NOT NULL,
   PRIMARY KEY (`id_recipe`,`id_tag`),
   CONSTRAINT `recipe_tag_fk_1` FOREIGN KEY (`id_recipe`) REFERENCES `recipe` (`id`),
   CONSTRAINT `recipe_tag_fk_2` FOREIGN KEY (`id_tag`) REFERENCES `tag` (`id`)
