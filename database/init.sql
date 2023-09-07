@@ -47,12 +47,9 @@ CREATE TABLE `recipe` (
   `description` text,
   `steps` json NOT NULL,
   `nutrition` json NOT NULL,
-  `calorie_level` int NOT NULL,
   `submitted_at` date NOT NULL,
-  `last_updated` date NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `recipe_fk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
-  CONSTRAINT `recipe_chk_1` CHECK (0<=`calorie_level` AND `calorie_level`<=2)
+  CONSTRAINT `recipe_fk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
 );
 
 --
@@ -78,7 +75,7 @@ CREATE TABLE `rating` (
 --
 
 CREATE TABLE `ingredient` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`name`)
@@ -101,7 +98,7 @@ CREATE TABLE `recipe_ingredient` (
 --
 
 CREATE TABLE `tag` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`name`)

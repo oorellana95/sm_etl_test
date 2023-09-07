@@ -1,4 +1,6 @@
-"""Recipe data model definition."""
+"""
+Recipe data SQLAlchemy model
+"""
 from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.mysql import JSON
 
@@ -16,10 +18,4 @@ class Recipe(Base):
     minutes = Column(Integer, nullable=False)
     steps = Column(JSON, nullable=False)
     nutrition = Column(JSON, nullable=False)
-    calorie_level = Column(
-        Integer,
-        CheckConstraint("0<=`calorie_level` AND `calorie_level`<=2"),
-        nullable=False,
-    )
     submitted_at = Column(Date, nullable=False)
-    updated_at = Column(Date, nullable=False)
