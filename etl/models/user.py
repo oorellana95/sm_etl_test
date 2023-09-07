@@ -1,4 +1,6 @@
-"""User data model definition."""
+"""
+User data SQLAlchemy model
+"""
 from sqlalchemy import Column, Date, Enum, ForeignKey, Integer, String
 
 from etl.services.database import Base

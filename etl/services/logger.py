@@ -1,4 +1,6 @@
-"""Logger Class"""
+"""
+Logger Class
+"""
 import logging
 
 from etl.config import PROJECT_NAME, SERVICE_NAME

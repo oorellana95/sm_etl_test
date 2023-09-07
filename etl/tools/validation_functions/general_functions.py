@@ -1,5 +1,5 @@
 """
-Validation functions:
+Validation functions - General module
 The functions are all meant to check specific type of data or lengths. They can expect a list or just a single value.
 """
 import datetime
@@ -30,6 +30,7 @@ def contains_all_valid_ranking_numbers(list_integers: list):
 
 
 def is_list_of_strings(single_str_arr_str: list):
+    """Check if the value is a list of strings."""
     try:
         parsed_list = eval(single_str_arr_str)
         if not isinstance(parsed_list, list) or not all(
@@ -45,11 +46,13 @@ def is_list_of_strings(single_str_arr_str: list):
 
 
 def contains_list_of_strings(list_strings: list):
+    """Check if the list of values are lists of strings."""
     for value in list_strings:
         is_list_of_strings(value)
 
 
 def is_list_of_floats(single_str_arr_float: list):
+    """Check if the value is a list of floats."""
     try:
         parsed_list = eval(single_str_arr_float)
         if not isinstance(parsed_list, list) or not all(
@@ -65,11 +68,13 @@ def is_list_of_floats(single_str_arr_float: list):
 
 
 def contains_list_of_floats(list_strings: list):
+    """Check if the list of values are lists of floats."""
     for value in list_strings:
         is_list_of_floats(value)
 
 
 def is_valid_email(email):
+    """Check if the value is a valid email address."""
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     if re.match(pattern, email):
         return
@@ -77,16 +82,19 @@ def is_valid_email(email):
 
 
 def contains_list_of_emails(list_emails: list):
+    """Check if the list of values are valid email addresses."""
     for email in list_emails:
         is_valid_email(email)
 
 
 def is_valid_sex(sex):
+    """Check if the value is a valid sex (male or female)."""
     if sex.lower() in ("male", "female"):
         return
     raise ValueError("Incorrect data format, should be a valid sex (male or female)")
 
 
 def contains_list_of_sex_values(sex_values: list):
+    """Check if the list of values are valid sex values (male or female)."""
     for sex in sex_values:
         is_valid_sex(sex)

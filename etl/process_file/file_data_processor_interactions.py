@@ -1,6 +1,6 @@
 """
-ProcessFileInteractions Class
-Custom class inherited from the ProcessFile Class with the Interactions specifications to process the file.
+FileDataProcessorInteractions Class
+Custom class inherited from the FileDataProcessor Class with the Interactions specifications to process the file.
 """
 
 from etl.config import RAW_INTERACTIONS_PATH

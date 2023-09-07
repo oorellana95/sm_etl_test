@@ -1,4 +1,7 @@
-"""File Processing Validation Exception Classes"""
+"""
+FileProcessingError Class
+This is the base exception class for handling errors that occur during file processing within the SmEtlTest project.
+"""
 from etl.exceptions.sm_etl_test_exception import SmEtlTestException
 
 

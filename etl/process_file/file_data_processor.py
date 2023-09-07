@@ -1,5 +1,6 @@
 """
-ProcessFile Class
+FileDataProcessor Class
+Main class to inherit from with the intention to process files, extracting, checking and loading the data.
 """
 
 from abc import ABC
@@ -29,15 +30,15 @@ class FileDataProcessor(ABC):
     def execute(self):
         """Extract, check and loads the data to the database."""
         self._extract_data()
-        # self._check_data()
+        self._check_data()
         self._load_data()
 
     def _extract_data(self) -> pd.DataFrame:
-        """Extracts the data from different types of files and returns a pandas dataframe."""
+        """Extracts the data accordingly checking the file type."""
         if self.file_type == "xlsx" or self.file_type == "xls":
             self.data = pd.read_excel(self.file_path)
         elif self.file_type == "csv":
-            self.data = pd.read_csv(self.file_path)
+            self.data = pd.read_csv(self.file_path)[0:3]
         else:
             raise FileFormatNotAcceptedError(
                 message=f"File format not accepted: {self.file_type}. Only accepted CSV, XLSX and XLS formats",
@@ -52,7 +53,7 @@ class FileDataProcessor(ABC):
         return self.data
 
     def _check_data(self) -> None:
-        """Checks if the dataframe has, at least, the expected structure and data types."""
+        """Check if the dataframe has the expected structure and data types."""
         self._check_mandatory_columns()
         self._check_data_from_columns()
         self.additional_checks()
@@ -63,6 +64,7 @@ class FileDataProcessor(ABC):
         mandatory_columns = set([column.name for column in self.column_checkers])
         current_columns = set(self.data.columns)
 
+        # Check if the sets of mandatory and current columns match
         if mandatory_columns != current_columns:
             missing_mandatory_columns = mandatory_columns - current_columns
             if missing_mandatory_columns:
@@ -76,29 +78,29 @@ class FileDataProcessor(ABC):
                 )
 
     def _check_data_from_columns(self) -> None:
-        """Raise an input validation error if there are column types not expected."""
+        """Raise an input validation error if there are unexpected column types or check function errors."""
         for column_checker in self.column_checkers:
-            df_column = self.data[column_checker.name]
-            is_same_type = pd.api.types.is_dtype_equal(
-                column_checker.value_type, df_column.dtype
-            )
-            if not is_same_type:
-                raise ColumnTypeError(
-                    message=f"From column: {column_checker.name}. Column type should be: {column_checker.value_type}. "
-                    f"But is of type: {df_column.dtype}",
-                    file_path=f"{self.file_path}",
-                )
+            column_name = column_checker.name
+            expected_type = column_checker.value_type
+            df_column = self.data[column_name]
+
+            # Check if the actual column type matches the expected type
+            if not pd.api.types.is_dtype_equal(expected_type, df_column.dtype):
+                message = f"Column '{column_name}' should have type '{expected_type}' but is of type '{df_column.dtype}'."
+                raise ColumnTypeError(message=message, file_path=self.file_path)
+
+            # If a custom check function is provided, execute it and handle any exceptions
             if column_checker.check_function:
                 try:
                     column_checker.check_function(df_column)
                 except ValueError as e:
-                    raise ColumnTypeError(
-                        message=f"From column {column_checker.name}. {e}",
-                        file_path=f"{self.file_path}",
-                    )
+                    message = f"Error in column '{column_name}': {e}"
+                    raise ColumnTypeError(message=message, file_path=self.file_path)
 
     def _load_data(self) -> None:
+        """Attempt to load data into the database and handle exceptions."""
         try:
+            # Call the custom load_data method to load data into the database
             self.load_data()
         except Exception as e:
             raise DatabaseLoadFileProcessingError(
@@ -112,4 +114,5 @@ class FileDataProcessor(ABC):
         pass
 
     def load_data(self) -> None:
+        """Function to load data into the database."""
         pass

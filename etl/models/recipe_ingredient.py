@@ -1,4 +1,6 @@
-"""RecipeIngredient data model definition."""
+"""
+RecipeIngredient data SQLAlchemy model
+"""
 from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String
 
 from etl.services.database import Base

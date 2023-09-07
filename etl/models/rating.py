@@ -1,4 +1,6 @@
-"""Rating data model definition."""
+"""
+Rating data SQLAlchemy model
+"""
 from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, String
 
 from etl.services.database import Base

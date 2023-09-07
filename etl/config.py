@@ -1,6 +1,6 @@
 import os
 
-# Critical values should be as SECRETS.
+# Critical values should be SECRETS.
 
 # General
 PROJECT_NAME: str = "sm_etl_test"

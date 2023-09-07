@@ -1,4 +1,8 @@
-"""File Processing Validation Exception Classes"""
+"""
+ExtractValidationFileProcessingError Classes
+This module defines custom exception classes for handling errors that occur during the extraction and validation of
+files in the SmEtlTest project.
+"""
 from etl.exceptions.file_processing_exeptions.file_processing_error import (
     FileProcessingError,
 )

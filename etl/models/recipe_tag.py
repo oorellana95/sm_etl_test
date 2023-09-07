@@ -1,4 +1,6 @@
-"""RecipeTag data model definition."""
+"""
+RecipeTag data SQLAlchemy model
+"""
 from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint
 
 from etl.services.database import Base

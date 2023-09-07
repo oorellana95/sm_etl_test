@@ -1,11 +1,12 @@
-"""SQLAlchemy Database."""
+"""
+SQLAlchemy Database
+"""
 from contextlib import contextmanager
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from etl import config
 from etl.config import (
     DATABASE_DIALECT,
     DATABASE_HOST,
@@ -31,7 +32,7 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 @contextmanager
 def create_database_session():
-    """Get database local session"""
+    """Get database local session."""
     db = SessionLocal()
     try:
         yield db
@@ -40,4 +41,5 @@ def create_database_session():
 
 
 def create_database_tables() -> None:
+    """Creates a database from the models."""
     Base.metadata.create_all(engine)

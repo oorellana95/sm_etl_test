@@ -1,6 +1,6 @@
 """
-Attributes Class
-Creates a standardized class to check columns from a dataframe.
+ColumnChecker Class
+Creates a standardized class for dataframe checking purposes.
 """
 from typing import Any, Optional
 
