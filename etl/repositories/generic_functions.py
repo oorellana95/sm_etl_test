@@ -1,3 +1,15 @@
+def protect_session_with_rollback(func):
+    def wrapper(db_session, *args, **kwargs):
+        try:
+            return func(db_session, *args, **kwargs)
+        except Exception as e:
+            # In case of an error, rollback any changes made to the database
+            db_session.rollback()
+            raise e
+
+    return wrapper
+
+
 def upsert_data(db_session, model, new_entries, primary_key_name="id"):
     # Extract primary key values from new entries
     new_primary_key_values = [entry.get(primary_key_name) for entry in new_entries]

@@ -5,24 +5,19 @@ import pandas as pd
 
 from etl.models.job_title import JobTitle
 from etl.models.user import User
-from etl.repositories.generic_functions import upsert_data
+from etl.repositories.generic_functions import upsert_data, protect_session_with_rollback
 
 
+@protect_session_with_rollback
 def load_users(db_session, users_df: pd.DataFrame):
-    """Function to load users that only have unique names and its identifiers"""
-    try:
-        # Load job titles and merge id_job_title with users
-        users_df = merge_id_job_titles(db_session, users_df)
+    # Load job titles and merge id_job_title with users
+    users_df = merge_id_job_titles(db_session, users_df)
 
-        # Convert the DataFrame to a list of dictionaries
-        entries = users_df.to_dict(orient="records")
+    # Convert the DataFrame to a list of dictionaries
+    entries = users_df.to_dict(orient="records")
 
-        # Upsert the data into the User table
-        upsert_data(db_session, User, entries)
-
-    except Exception as e:
-        db_session.rollback()
-        raise e
+    # Upsert the data into the User table
+    upsert_data(db_session, User, entries)
 
 
 def merge_id_job_titles(db_session, users_df: pd.DataFrame):
