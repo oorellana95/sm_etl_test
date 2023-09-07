@@ -30,12 +30,12 @@ def load_recipes(db_session, recipes_df: pd.DataFrame):
             "minutes": "minutes",
             "email": "steps",
             "nutrition": "nutrition",
-            "date of birth": "calorie_level",
             "submitted": "submitted_at",
         }
     )
 
     # Convert the DataFrame to a list of dictionaries
+    recipes_df["description"] = recipes_df["description"].replace({pd.NA: None})
     entries = recipes_df.to_dict(orient="records")
 
     # Upsert the data into the Recipe table and its associated tables

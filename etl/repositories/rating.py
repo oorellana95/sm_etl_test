@@ -25,6 +25,7 @@ def load_ratings(db_session, ratings_df: pd.DataFrame):
     )
 
     # Convert the DataFrame to a list of dictionaries
+    ratings_df["review"] = ratings_df["review"].replace({pd.NA: None})
     entries = ratings_df.to_dict(orient="records")
 
     # Upsert the data into the Rating table

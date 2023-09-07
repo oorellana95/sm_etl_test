@@ -38,7 +38,7 @@ class FileDataProcessor(ABC):
         if self.file_type == "xlsx" or self.file_type == "xls":
             self.data = pd.read_excel(self.file_path)
         elif self.file_type == "csv":
-            self.data = pd.read_csv(self.file_path)[0:3]
+            self.data = pd.read_csv(self.file_path)
         else:
             raise FileFormatNotAcceptedError(
                 message=f"File format not accepted: {self.file_type}. Only accepted CSV, XLSX and XLS formats",
