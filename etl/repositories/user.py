@@ -1,34 +1,61 @@
-from etl.models.ingredient import Ingredient
+"""
+User repository module
+"""
+import pandas as pd
+
 from etl.models.job_title import JobTitle
-from etl.models.tag import Tag
+from etl.models.user import User
+from etl.repositories.generic_functions import upsert_data
 
 
-def load_job_titles(db_session, job_titles):
-    _load_unique_name_table(db_session=db_session, model=JobTitle, values=job_titles)
+def load_users(db_session, users_df: pd.DataFrame):
+    """Function to load users that only have unique names and its identifiers"""
+    try:
+        # Load job titles and merge id_job_title with users
+        users_df = merge_id_job_titles(db_session, users_df)
+
+        # Convert the DataFrame to a list of dictionaries
+        entries = users_df.to_dict(orient="records")
+
+        # Upsert the data into the User table
+        upsert_data(db_session, User, entries)
+
+    except Exception as e:
+        db_session.rollback()
+        raise e
 
 
-def load_tags(db_session, tags):
-    _load_unique_name_table(db_session=db_session, model=Tag, values=tags)
-
-
-def load_ingredients(db_session, ingredients):
-    _load_unique_name_table(db_session=db_session, model=Ingredient, values=ingredients)
-
-
-def _load_unique_name_table(db_session, model, values):
-    """Function to load tables that only have unique names and its identifiers"""
-    values_to_insert = set(values)
-    values_from_database = set(
-        [job_title.name for job_title in db_session.query(model).all()]
+def merge_id_job_titles(db_session, users_df: pd.DataFrame):
+    """Merge users_df with job titles from the database"""
+    job_titles_df = pd.read_sql(
+        db_session.query(
+            JobTitle.id.label("id_job_title"), JobTitle.name.label("name_job_title")
+        ).statement,
+        db_session.bind,
     )
-    missing_entries = values_to_insert - values_from_database
 
-    if missing_entries:
-        try:
-            for entry in missing_entries:
-                new_row = model(name=entry)
-                db_session.add(new_row)
-            db_session.commit()
-        except Exception as e:
-            db_session.rollback()
-            raise e
+    # Merge users_df with job_titles_df
+    users_df = pd.merge(
+        users_df,
+        job_titles_df,
+        left_on="job title",
+        right_on="name_job_title",
+        how="left",
+    )
+
+    # Drop unnecessary columns and rename columns
+    users_df = users_df.drop(columns=["job title", "name_job_title"]).rename(
+        columns={
+            "user id": "id",
+            "encoded id": "id_encoded",
+            "first name": "first_name",
+            "last name": "last_name",
+            "Sex": "sex",
+            "email": "email",
+            "phone": "phone",
+            "date of birth": "birthdate",
+            "id_job_title": "id_job_title",
+        }
+    )
+
+    return users_df
