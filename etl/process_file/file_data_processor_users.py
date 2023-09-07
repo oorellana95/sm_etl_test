@@ -1,12 +1,13 @@
 """
-ProcessFileUsers Class
-Custom class inherited from the ProcessFile Class with the Interactions specifications to process the file.
+FileDataProcessorUsers Class
+Custom class inherited from the FileDataProcessor Class with the Interactions specifications to process the file.
 """
 
 from etl.config import RAW_USERS_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.repositories.unique_name_table import load_job_titles
+from etl.repositories.user import load_users
 from etl.tools.validation_functions.general_functions import (
     contains_all_dates,
     contains_list_of_emails,
@@ -44,6 +45,8 @@ class FileDataProcessorUsers(FileDataProcessor):
         ]
 
     def load_data(self):
+        """Load data from the file, creating and updating job_titles and users"""
         load_job_titles(
             db_session=self.db_session, job_titles=self.data["job title"].unique()
         )
+        load_users(db_session=self.db_session, users_df=self.data)
