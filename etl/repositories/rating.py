@@ -8,20 +8,16 @@ from etl.repositories.generic_functions import upsert_data, protect_session_with
 
 
 @protect_session_with_rollback
-def load_recipes(db_session, ratings_df: pd.DataFrame):
-    """Function to load recipes into the database"""
+def load_ratings(db_session, ratings_df: pd.DataFrame):
+    """Function to load ratings into the database"""
     #  Rename DataFrame columns to match the target table
     ratings_df = ratings_df.rename(
         columns={
-            "id": "id",
-            "contributor_id": "id_user",
-            "name": "name",
-            "description": "description",
-            "minutes": "minutes",
-            "email": "steps",
-            "nutrition": "nutrition",
-            "date of birth": "calorie_level",
-            "submitted": "submitted_at",
+            "user_id": "id_user",
+            "recipe_id": "id_recipe",
+            "date": "submitted_at",
+            "rating": "valuation",
+            "review": "review"
         }
     )
 

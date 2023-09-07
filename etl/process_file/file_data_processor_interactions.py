@@ -6,6 +6,7 @@ Custom class inherited from the FileDataProcessor Class with the Interactions sp
 from etl.config import RAW_INTERACTIONS_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
+from etl.repositories.rating import load_ratings
 from etl.tools.validation_functions.general_functions import (
     contains_all_dates,
     contains_all_valid_ranking_numbers,
@@ -30,3 +31,9 @@ class FileDataProcessorInteractions(FileDataProcessor):
             ),
             ColumnChecker(name="review", value_type="object", check_function=None),
         ]
+
+    def load_data(self):
+        """Load data from the file, creating and updating job_titles and users"""
+        load_ratings(
+            db_session=self.db_session, ratings_df=self.data
+        )

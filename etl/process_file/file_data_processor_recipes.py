@@ -8,7 +8,7 @@ from etl.exceptions.file_processing_exeptions.extract_validation_file_processing
 )
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
-from etl.repositories.recipes import load_recipes
+from etl.repositories.recipe import load_recipes
 from etl.repositories.unique_name_table import load_ingredients, load_tags
 from etl.tools.util_functions import evaluate_and_flatten_nested_lists
 from etl.tools.validation_functions.general_functions import (

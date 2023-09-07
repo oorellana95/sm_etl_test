@@ -57,12 +57,12 @@ CREATE TABLE `recipe` (
 --
 
 CREATE TABLE `rating` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
   `id_recipe` int NOT NULL,
   `valuation` int NOT NULL,
   `review` varchar(255) DEFAULT NULL,
-  `submitted_date` date NOT NULL,
+  `submitted_at` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`id_user`,`id_recipe`),
   CONSTRAINT `rating_fk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),

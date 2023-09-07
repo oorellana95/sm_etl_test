@@ -10,11 +10,11 @@ class Rating(Base):
     """Rating table definition."""
 
     __tablename__ = "rating"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey("user.id"), nullable=False)
     id_recipe = Column(Integer, ForeignKey("recipe.id"), nullable=False)
     valuation = Column(
-        Integer, CheckConstraint("0<=`valuation` AND `valuation`<=2"), nullable=False
+        Integer, CheckConstraint("0<=`valuation` AND `valuation`<=5"), nullable=False
     )
     review = Column(String(255), nullable=True)
     submitted_at = Column(Date, nullable=False)
