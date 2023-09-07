@@ -5,7 +5,10 @@ import pandas as pd
 
 from etl.models.job_title import JobTitle
 from etl.models.user import User
-from etl.repositories.generic_functions import upsert_data, protect_session_with_rollback
+from etl.repositories.generic_functions import (
+    protect_session_with_rollback,
+    upsert_data,
+)
 
 
 @protect_session_with_rollback

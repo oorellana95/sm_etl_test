@@ -1,5 +1,7 @@
 from etl.exceptions.sm_etl_test_exception import SmEtlTestException
-from etl.process_file.file_data_processor_interactions import FileDataProcessorInteractions
+from etl.process_file.file_data_processor_interactions import (
+    FileDataProcessorInteractions,
+)
 from etl.process_file.file_data_processor_recipes import FileDataProcessorRecipes
 from etl.process_file.file_data_processor_users import FileDataProcessorUsers
 from etl.services.database import create_database_session

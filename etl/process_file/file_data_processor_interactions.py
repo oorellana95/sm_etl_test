@@ -34,6 +34,4 @@ class FileDataProcessorInteractions(FileDataProcessor):
 
     def load_data(self):
         """Load data from the file, creating and updating job_titles and users"""
-        load_ratings(
-            db_session=self.db_session, ratings_df=self.data
-        )
+        load_ratings(db_session=self.db_session, ratings_df=self.data)

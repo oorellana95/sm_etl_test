@@ -15,8 +15,12 @@ def protect_session_with_rollback(func):
 
 def upsert_data(db_session, model, new_entries, primary_key_names=("id",)):
     """Main upsert_data function that orchestrates the upsert process"""
-    existing_entries_dict = _query_existing_entries_dict(db_session, model, primary_key_names, new_entries)
-    _upsert_entries(db_session, model, new_entries, existing_entries_dict, primary_key_names)
+    existing_entries_dict = _query_existing_entries_dict(
+        db_session, model, primary_key_names, new_entries
+    )
+    _upsert_entries(
+        db_session, model, new_entries, existing_entries_dict, primary_key_names
+    )
 
 
 def _query_existing_entries_dict(db_session, model, primary_key_names, new_entries):

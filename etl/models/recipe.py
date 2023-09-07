@@ -1,7 +1,7 @@
 """
 Recipe data SQLAlchemy model
 """
-from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, Date, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.mysql import JSON
 
 from etl.services.database import Base
