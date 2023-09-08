@@ -21,6 +21,7 @@ def upsert_data(db_session, model, new_entries, primary_key_names=("id",)):
     _upsert_entries(
         db_session, model, new_entries, existing_entries_dict, primary_key_names
     )
+    db_session.commit()
 
 
 def _query_existing_entries_dict(db_session, model, primary_key_names, new_entries):
@@ -69,5 +70,3 @@ def _upsert_entries(
     # Bulk insert new entries into the database
     if entries_to_insert:
         db_session.bulk_insert_mappings(model, entries_to_insert)
-
-    db_session.commit()

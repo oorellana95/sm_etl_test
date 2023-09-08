@@ -8,10 +8,12 @@ SERVICE_NAME: str = "ETL Service"
 
 # Files
 PATH_ROOT_DIR = os.path.abspath("")
-PATH_INPUT_DIR = os.path.join(PATH_ROOT_DIR, "data_test")
+PATH_INPUT_DIR = os.path.join(PATH_ROOT_DIR, "data_test/input")
 RAW_USERS_PATH = os.path.join(PATH_INPUT_DIR, "RAW_users.csv")
 RAW_RECIPES_PATH = os.path.join(PATH_INPUT_DIR, "RAW_recipes.csv")
 RAW_INTERACTIONS_PATH = os.path.join(PATH_INPUT_DIR, "RAW_interactions.csv")
+
+PATH_OUTPUT_DIR = os.path.join(PATH_ROOT_DIR, "data_test/output")
 
 # Database
 DATABASE_DIALECT: str = "mysql+pymysql"

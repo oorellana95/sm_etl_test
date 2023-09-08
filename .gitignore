@@ -1,6 +1,7 @@
 **/.DS_Store
 **/___pycache__/
 /.pytest_cache
-data_test/*.csv
+data_test/input/**
+data_test/output/**
 /.idea
 /venv

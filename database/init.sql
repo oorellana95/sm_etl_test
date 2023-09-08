@@ -26,11 +26,11 @@ CREATE TABLE `user` (
   `id_encoded` varchar(100) NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
-  `sex` enum('Male','Female') NOT NULL,
+  `sex` enum('Male','Female') DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(100) NOT NULL,
   `birthdate` date NOT NULL,
-  `id_job_title` int NOT NULL,
+  `id_job_title` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `user_fk_1` FOREIGN KEY (`id_job_title`) REFERENCES `job_title` (`id`)
 );
