@@ -10,13 +10,15 @@ from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.repositories.recipe import load_recipes
 from etl.repositories.unique_name_table import load_ingredients, load_tags
-from etl.tools.util_functions import evaluate_and_flatten_nested_lists
-from etl.tools.validation_functions.general_functions import (
+from etl.tools.functions.general.list_evaluation_utils import (
+    evaluate_and_flatten_nested_lists,
+)
+from etl.tools.functions.general.validation import (
     contains_all_dates,
     contains_list_of_floats,
     contains_list_of_strings,
 )
-from etl.tools.validation_functions.pandas_functions import check_array_str_lengths
+from etl.tools.functions.pandas.validation import check_array_str_lengths
 
 
 class FileDataProcessorRecipes(FileDataProcessor):
@@ -80,13 +82,10 @@ class FileDataProcessorRecipes(FileDataProcessor):
 
     def load_data(self):
         """Load data from the file, creating and updating tags, ingredients, recipes and its relationships"""
-        # Load tags
         tags = evaluate_and_flatten_nested_lists(self.data["tags"])
         load_tags(db_session=self.db_session, tags=tags)
 
-        # Load ingredients
         ingredients = evaluate_and_flatten_nested_lists(self.data["ingredients"])
         load_ingredients(db_session=self.db_session, ingredients=ingredients)
 
-        # Load recipes
         load_recipes(db_session=self.db_session, recipes_df=self.data)

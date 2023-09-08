@@ -7,7 +7,7 @@ from etl.config import RAW_INTERACTIONS_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.repositories.rating import load_ratings
-from etl.tools.validation_functions.general_functions import (
+from etl.tools.functions.general.validation import (
     contains_all_dates,
     contains_all_valid_ranking_numbers,
 )

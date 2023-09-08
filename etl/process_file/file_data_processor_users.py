@@ -8,7 +8,7 @@ from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.repositories.unique_name_table import load_job_titles
 from etl.repositories.user import load_users
-from etl.tools.validation_functions.general_functions import (
+from etl.tools.functions.general.validation import (
     contains_all_dates,
     contains_list_of_emails,
     contains_list_of_sex_values,
