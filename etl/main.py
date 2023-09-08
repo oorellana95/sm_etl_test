@@ -12,7 +12,7 @@ if __name__ == "__main__":
         try:
             FileDataProcessorUsers(db_session=db).execute()
             FileDataProcessorRecipes(db_session=db).execute()
-            FileDataProcessorInteractions(db_session=db).execute()
+            # FileDataProcessorInteractions(db_session=db).execute()
 
             Logger.info(f"All data files have been processed correctly :)")
         except SmEtlTestException as e:
@@ -21,12 +21,10 @@ if __name__ == "__main__":
                 code=e.code,
                 additional_information=e.additional_information,
             )
-            # Re-raise the uncontrolled exception to propagate it for debugging
             raise
         except Exception as e:
             Logger.error(
                 message=f"An uncontrolled exception occurred: {e}",
                 code="UNCONTROLLED EXCEPTION",
             )
-            # Re-raise the uncontrolled exception to propagate it for debugging
             raise

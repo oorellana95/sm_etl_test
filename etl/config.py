@@ -22,3 +22,4 @@ DATABASE_PORT: int = 3306
 DATABASE_USER: str = "master"
 DATABASE_PASSWORD: str = "pass"
 DATABASE_NAME: str = "culinary_recipes_mysql"
+DATABASE_BATCH_SIZE: int = 1000

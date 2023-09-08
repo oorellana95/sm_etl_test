@@ -4,26 +4,24 @@ User repository module
 import pandas as pd
 from etl.models.job_title import JobTitle
 from etl.models.user import User, placeholder_not_specified_user
-from etl.repositories.generic_functions import (
-    protect_session_with_rollback,
+from etl.repositories._repository_functions import (
+    apply_session_rollback_decorator,
     upsert_data,
 )
 
 
-@protect_session_with_rollback
-def insert_placeholder_users_into_db(db_session, new_user_ids):
+@apply_session_rollback_decorator
+def insert_placeholder_users_into_db(db_session, new_entries):
     entries_to_insert = []
 
-    for user_id in new_user_ids:
+    for user_id in new_entries:
         user_dict = placeholder_not_specified_user.copy()
         user_dict["id"] = user_id
         entries_to_insert.append(user_dict)
 
     db_session.bulk_insert_mappings(User, entries_to_insert)
-    db_session.commit()
 
 
-@protect_session_with_rollback
 def load_users(db_session, users_df: pd.DataFrame):
     users_df = _merge_id_job_titles(db_session, users_df)
     entries = users_df.to_dict(orient="records")
@@ -42,7 +40,7 @@ def fetch_job_titles_dataframe(db_session):
 
 
 def fetch_user_ids(db_session):
-    return db_session.query(User.id.label("id_user")).all()
+    return [result[0] for result in db_session.query(User.id.label("id_user")).all()]
 
 
 def _merge_id_job_titles(db_session, users_df: pd.DataFrame):

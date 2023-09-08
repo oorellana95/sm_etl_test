@@ -2,6 +2,7 @@
 Logger Class
 """
 import logging
+from datetime import datetime
 
 from etl.config import PROJECT_NAME, SERVICE_NAME
 
@@ -69,7 +70,7 @@ class Logger:
         cls, logger_type: str, message: str, code: str, additional_information: dict
     ):
         """Output message with code and value."""
-        output = f"{logger_type} in {cls._project}:{cls._service};"
+        output = f"{datetime.now()} - {logger_type} in {cls._project}:{cls._service};"
         if code:
             output = output + f"\n{logger_type} code: {code};"
         if additional_information:

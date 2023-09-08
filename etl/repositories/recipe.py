@@ -8,16 +8,12 @@ from etl.models.recipe import Recipe
 from etl.models.recipe_ingredient import RecipeIngredient
 from etl.models.recipe_tag import RecipeTag
 from etl.models.tag import Tag
-from etl.repositories.generic_functions import (
-    protect_session_with_rollback,
-    upsert_data,
-)
+from etl.repositories._repository_functions import upsert_data
 from etl.repositories.user import fetch_user_ids, insert_placeholder_users_into_db
 from etl.services.exports import save_dataframe_to_timestamped_csv
 from etl.services.logger import Logger
 
 
-@protect_session_with_rollback
 def load_recipes(db_session, recipes_df: pd.DataFrame):
     """The main function that orchestrates the entire process of loading recipes into the database"""
     processed_df = _preprocess_recipes_data(recipes_df)
@@ -79,18 +75,14 @@ def _upsert_recipes(db_session, recipes_df):
 
 def _upsert_recipes_with_valid_id_user(db_session, recipes_df, existing_user_ids):
     """Upsert valid recipes with existing user IDs"""
-    valid_recipes_df = recipes_df[
-        recipes_df["id_user"].apply(lambda x: (x,) in existing_user_ids)
-    ]
+    valid_recipes_df = recipes_df[recipes_df["id_user"].isin(existing_user_ids)]
     valid_recipe_entries = valid_recipes_df.to_dict(orient="records")
     upsert_data(db_session, Recipe, valid_recipe_entries)
 
 
 def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_ids):
     """Handle recipes with invalid user IDs"""
-    invalid_recipes_df = recipes_df[
-        ~recipes_df["id_user"].apply(lambda x: (x,) in existing_user_ids)
-    ]
+    invalid_recipes_df = recipes_df[~recipes_df["id_user"].isin(existing_user_ids)]
 
     # Check if there are invalid recipes before proceeding with operations
     if not invalid_recipes_df.empty:
@@ -99,7 +91,9 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
         )
 
         # Insert placeholder users and upsert data for invalid recipes
-        insert_placeholder_users_into_db(db_session, set(invalid_recipes_df["id_user"]))
+        insert_placeholder_users_into_db(
+            db_session=db_session, new_entries=set(invalid_recipes_df["id_user"])
+        )
 
         # Insert valid recipe entries after creating the placeholder users
         valid_recipe_entries = invalid_recipes_df.to_dict(orient="records")

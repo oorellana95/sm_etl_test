@@ -1,14 +1,39 @@
 from sqlalchemy import tuple_
 
+from etl.config import DATABASE_BATCH_SIZE
 
-def protect_session_with_rollback(func):
-    def wrapper(db_session, *args, **kwargs):
-        try:
-            return func(db_session, *args, **kwargs)
-        except Exception as e:
-            # In case of an error, rollback any changes made to the database
-            db_session.rollback()
-            raise e
+
+def apply_session_rollback_decorator(func):
+    """
+    Decorator function that applies session rollback on exceptions.
+
+    Functions using this decorator should pass arguments as keywords.
+    `db_session` and `new_entries` are mandatory parameters.
+
+    Example usage:
+        @apply_session_rollback_decorator
+        def my_function(db_session=db_session, new_entries, arg1=value1, arg2=value2):
+            # Function implementation
+    """
+
+    def wrapper(db_session, new_entries, *args, **kwargs):
+        errors = []
+        new_entries_list = list(new_entries)
+        for i in range(0, len(new_entries), DATABASE_BATCH_SIZE):
+            batch = new_entries_list[i : i + DATABASE_BATCH_SIZE]
+            errors = []
+            try:
+                # Split the data into batches
+                func(db_session=db_session, new_entries=batch, *args, **kwargs)
+                db_session.commit()
+            except Exception as e:
+                # In case of an error, rollback any changes made to the database
+                db_session.rollback()
+                raise e
+                errors.append({"batch": f"{i}:{i + DATABASE_BATCH_SIZE}", "error": e})
+
+        if errors:
+            raise Exception(errors)
 
     return wrapper
 
@@ -19,9 +44,12 @@ def upsert_data(db_session, model, new_entries, primary_key_names=("id",)):
         db_session, model, primary_key_names, new_entries
     )
     _upsert_entries(
-        db_session, model, new_entries, existing_entries_dict, primary_key_names
+        db_session=db_session,
+        new_entries=new_entries,
+        model=model,
+        existing_entries_dict=existing_entries_dict,
+        primary_key_names=primary_key_names,
     )
-    db_session.commit()
 
 
 def _query_existing_entries_dict(db_session, model, primary_key_names, new_entries):
@@ -49,8 +77,9 @@ def _query_existing_entries_dict(db_session, model, primary_key_names, new_entri
     return existing_entries_dict
 
 
+@apply_session_rollback_decorator
 def _upsert_entries(
-    db_session, model, new_entries, existing_entries_dict, primary_key_names
+    db_session, new_entries, model, existing_entries_dict, primary_key_names
 ):
     """Function to upsert new entries into the database"""
     entries_to_insert = []
