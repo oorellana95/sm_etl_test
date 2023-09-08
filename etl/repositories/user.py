@@ -25,7 +25,7 @@ def insert_placeholder_users_into_db(db_session, new_entries):
 def load_users(db_session, users_df: pd.DataFrame):
     users_df = _merge_id_job_titles(db_session, users_df)
     entries = users_df.to_dict(orient="records")
-    upsert_data(db_session, User, entries)
+    upsert_data(db_session=db_session, model=User, new_entries=entries)
 
 
 def fetch_job_titles_dataframe(db_session):

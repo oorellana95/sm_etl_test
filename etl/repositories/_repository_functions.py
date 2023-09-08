@@ -1,6 +1,9 @@
 from sqlalchemy import tuple_
 
 from etl.config import DATABASE_BATCH_SIZE
+from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
+    DatabaseTransactionError,
+)
 
 
 def apply_session_rollback_decorator(func):
@@ -29,27 +32,48 @@ def apply_session_rollback_decorator(func):
             except Exception as e:
                 # In case of an error, rollback any changes made to the database
                 db_session.rollback()
-                raise e
-                errors.append({"batch": f"{i}:{i + DATABASE_BATCH_SIZE}", "error": e})
+                errors.append(
+                    {
+                        "error_number": len(errors),
+                        "batch": f"{i}:{i + DATABASE_BATCH_SIZE}",
+                        "error_message": e,
+                    }
+                )
+                break
 
         if errors:
-            raise Exception(errors)
+            raise DatabaseTransactionError(
+                message=f"An amount of {len(errors)} has been registered while loading data",
+                multiple_errors=errors,
+            )
 
     return wrapper
 
 
-def upsert_data(db_session, model, new_entries, primary_key_names=("id",)):
-    """Main upsert_data function that orchestrates the upsert process"""
+@apply_session_rollback_decorator
+def upsert_data(db_session, new_entries, model, primary_key_names):
+    """Function to upsert new entries into the database"""
     existing_entries_dict = _query_existing_entries_dict(
         db_session, model, primary_key_names, new_entries
     )
-    _upsert_entries(
-        db_session=db_session,
-        new_entries=new_entries,
-        model=model,
-        existing_entries_dict=existing_entries_dict,
-        primary_key_names=primary_key_names,
-    )
+
+    entries_to_insert = []
+
+    for new_entry in new_entries:
+        primary_key_values = tuple(new_entry.get(key) for key in primary_key_names)
+        existing_entry = existing_entries_dict.get(primary_key_values)
+
+        if existing_entry:
+            # Update existing entry with new data
+            for key, value in new_entry.items():
+                setattr(existing_entry, key, value)
+        else:
+            # Add new entry to the list for bulk insertion
+            entries_to_insert.append(new_entry)
+
+    # Bulk insert new entries into the database
+    if entries_to_insert:
+        db_session.bulk_insert_mappings(model, entries_to_insert)
 
 
 def _query_existing_entries_dict(db_session, model, primary_key_names, new_entries):
@@ -75,27 +99,3 @@ def _query_existing_entries_dict(db_session, model, primary_key_names, new_entri
         for existing_entry in existing_entries
     }
     return existing_entries_dict
-
-
-@apply_session_rollback_decorator
-def _upsert_entries(
-    db_session, new_entries, model, existing_entries_dict, primary_key_names
-):
-    """Function to upsert new entries into the database"""
-    entries_to_insert = []
-
-    for new_entry in new_entries:
-        primary_key_values = tuple(new_entry.get(key) for key in primary_key_names)
-        existing_entry = existing_entries_dict.get(primary_key_values)
-
-        if existing_entry:
-            # Update existing entry with new data
-            for key, value in new_entry.items():
-                setattr(existing_entry, key, value)
-        else:
-            # Add new entry to the list for bulk insertion
-            entries_to_insert.append(new_entry)
-
-    # Bulk insert new entries into the database
-    if entries_to_insert:
-        db_session.bulk_insert_mappings(model, entries_to_insert)

@@ -6,9 +6,8 @@ Main class to inherit from with the intention to process files, extracting, chec
 from abc import ABC
 
 import pandas as pd
-
 from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
-    DatabaseLoadFileProcessingError,
+    DatabaseTransactionError,
 )
 from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
     ColumnsNotFoundError,
@@ -29,9 +28,11 @@ class FileDataProcessor(ABC):
 
     def execute(self):
         """Extract, check and loads the data to the database."""
+        Logger.info(f"Start processing the file {self.file_path}")
         self._extract_data()
         self._check_data()
         self._load_data()
+        Logger.info(f"File processed: {self.file_path}")
 
     def _extract_data(self) -> pd.DataFrame:
         """Extracts the data accordingly checking the file type."""
@@ -100,14 +101,12 @@ class FileDataProcessor(ABC):
     def _load_data(self) -> None:
         """Attempt to load data into the database and handle exceptions."""
         try:
-            # Call the custom load_data method to load data into the database
             self.load_data()
-        except Exception as e:
-            raise DatabaseLoadFileProcessingError(
-                message=f"An error occurred while loading data. {e}",
-                file_path=self.file_path,
-                database_url=self.db_session.bind.url,
+        except DatabaseTransactionError as e:
+            e.set_additional_information(
+                file_path=self.file_path, database_url=self.db_session.bind.url
             )
+            raise e
 
     def additional_checks(self) -> None:
         """Function to add additional checks."""

@@ -20,6 +20,7 @@ if __name__ == "__main__":
                 message=e.message,
                 code=e.code,
                 additional_information=e.additional_information,
+                multiple_errors=e.multiple_errors,
             )
             raise
         except Exception as e:

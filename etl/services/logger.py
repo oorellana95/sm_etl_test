@@ -16,7 +16,13 @@ class Logger:
         return cls
 
     @classmethod
-    def error(cls, message: str, code: str = None, additional_information: dict = None):
+    def error(
+        cls,
+        message: str,
+        code: str = None,
+        additional_information: dict = None,
+        multiple_errors: dict = None,
+    ):
         """Log an error message with the standard output format."""
         cls._logger.setLevel(logging.ERROR)
         output = cls.output(
@@ -24,6 +30,7 @@ class Logger:
             message=message,
             code=code,
             additional_information=additional_information,
+            list_items=multiple_errors,
         )
         cls._logger.error(output)
 
@@ -67,12 +74,24 @@ class Logger:
 
     @classmethod
     def output(
-        cls, logger_type: str, message: str, code: str, additional_information: dict
+        cls,
+        logger_type: str,
+        message: str,
+        code: str,
+        additional_information: dict,
+        list_items: list = None,
     ):
         """Output message with code and value."""
         output = f"{datetime.now()} - {logger_type} in {cls._project}:{cls._service};"
+
         if code:
             output = output + f"\n{logger_type} code: {code};"
+        output + f"\nMessage: {message}"
         if additional_information:
-            output = output + f"\n{additional_information};"
-        return output + f"\nMessage: {message}"
+            output = output + f"\nAdditional information: {additional_information};"
+        if list_items:
+            output = output + f"\nRegistered items:"
+            for item in list_items:
+                output += f"\n  - {item}"
+
+        return output

@@ -9,3 +9,4 @@ class SmEtlTestException(Exception):
         self.code = None
         self.message = None
         self.additional_information = {}
+        self.multiple_errors = None

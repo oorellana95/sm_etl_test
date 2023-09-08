@@ -31,7 +31,7 @@ def _handle_recipes_missing_mandatory_values(recipes_df):
         )
         file_path = save_dataframe_to_timestamped_csv(
             df=recipes_df_with_nan,
-            filename_prefix="recipes_missing_mandatory_values.csv",
+            filename_prefix="recipes_missing_mandatory_values",
         )
         Logger.warning(
             f"Recipes missing mandatory values have been added to {file_path} for further analysis."
@@ -77,7 +77,7 @@ def _upsert_recipes_with_valid_id_user(db_session, recipes_df, existing_user_ids
     """Upsert valid recipes with existing user IDs"""
     valid_recipes_df = recipes_df[recipes_df["id_user"].isin(existing_user_ids)]
     valid_recipe_entries = valid_recipes_df.to_dict(orient="records")
-    upsert_data(db_session, Recipe, valid_recipe_entries)
+    upsert_data(db_session=db_session, model=Recipe, new_entries=valid_recipe_entries)
 
 
 def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_ids):
@@ -97,7 +97,9 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
         # Insert valid recipe entries after creating the placeholder users
         valid_recipe_entries = invalid_recipes_df.to_dict(orient="records")
-        upsert_data(db_session, Recipe, valid_recipe_entries)
+        upsert_data(
+            db_session=db_session, model=Recipe, new_entries=valid_recipe_entries
+        )
         Logger.warning(f"Blueprint users have been created with the corresponding ids.")
 
         # Save the DataFrame to a CSV file with a timestamped filename
