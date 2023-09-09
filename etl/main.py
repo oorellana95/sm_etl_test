@@ -10,11 +10,11 @@ from etl.services.logger import Logger
 if __name__ == "__main__":
     with create_database_session() as db:
         try:
+            Logger.info(message="Starting process to extract, check and load database")
             FileDataProcessorUsers(db_session=db).execute()
             FileDataProcessorRecipes(db_session=db).execute()
-            # FileDataProcessorInteractions(db_session=db).execute()
-
-            Logger.info(f"All data files have been processed correctly :)")
+            FileDataProcessorInteractions(db_session=db).execute()
+            Logger.info(message="All files have been processed successfully")
         except SmEtlTestException as e:
             Logger.error(
                 message=e.message,

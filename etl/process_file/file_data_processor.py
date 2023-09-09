@@ -28,11 +28,11 @@ class FileDataProcessor(ABC):
 
     def execute(self):
         """Extract, check and loads the data to the database."""
-        Logger.info(f"Start processing the file {self.file_path}")
+        Logger.info(message=f"Start processing the file: {self.file_path}")
         self._extract_data()
         self._check_data()
         self._load_data()
-        Logger.info(f"File processed: {self.file_path}")
+        Logger.info(message=f"File processed: {self.file_path}")
 
     def _extract_data(self) -> pd.DataFrame:
         """Extracts the data accordingly checking the file type."""
@@ -50,15 +50,16 @@ class FileDataProcessor(ABC):
             raise FileIsEmptyError(
                 message=f"File is empty", file_path=f"{self.file_path}"
             )
-        Logger.info(f"Data retrieved correctly from the file {self.file_path}")
+        Logger.info(message=f"Data retrieved correctly from the file {self.file_path}")
         return self.data
 
     def _check_data(self) -> None:
         """Check if the dataframe has the expected structure and data types."""
+        Logger.info(message=f"Quality checks starting...")
         self._check_mandatory_columns()
         self._check_data_from_columns()
         self.additional_checks()
-        Logger.info(f"All quality checks have passed for the file: {self.file_path}")
+        Logger.info(message=f"Quality checks passed")
 
     def _check_mandatory_columns(self) -> None:
         """Raise an input validation error if there are mandatory columns missing."""
@@ -75,7 +76,7 @@ class FileDataProcessor(ABC):
                 )
             else:
                 Logger.warning(
-                    f"The file {self.file_path} has more columns than expected. The additional columns are: {current_columns - mandatory_columns}"
+                    message=f"The file {self.file_path} has more columns than expected. The additional columns are: {current_columns - mandatory_columns}"
                 )
 
     def _check_data_from_columns(self) -> None:
