@@ -78,7 +78,7 @@ class Logger:
         list_items: list = None,
     ):
         """Output message with code and value."""
-        output = f"{datetime.now()} - {logger_type} in {PROJECT_NAME}:{SERVICE_NAME} - "
+        output = f"{datetime.now()} - {logger_type} in {PROJECT_NAME}:{SERVICE_NAME} "
 
         if code:
             output = output + f"\n{logger_type} code: {code};\n"
