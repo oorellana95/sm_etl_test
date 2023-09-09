@@ -4,7 +4,7 @@ import os
 
 # General
 PROJECT_NAME: str = "sm_etl_test"
-SERVICE_NAME: str = "ETL Service"
+SERVICE_NAME: str = "ETL_Service"
 
 # Files
 PATH_ROOT_DIR = os.path.abspath("")

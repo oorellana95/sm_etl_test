@@ -8,6 +8,7 @@ from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.repositories.unique_name_table import load_job_titles
 from etl.repositories.user import load_users
+from etl.services.logger import Logger
 from etl.tools.functions.general.validation import (
     contains_all_dates,
     contains_list_of_emails,
@@ -46,7 +47,14 @@ class FileDataProcessorUsers(FileDataProcessor):
 
     def load_data(self):
         """Load data from the file, creating and updating job_titles and users"""
+        # Load job titles
+        Logger.info(message=f"Loading job titles...")
         load_job_titles(
             db_session=self.db_session, job_titles=self.data["job title"].unique()
         )
+        Logger.info(message=f"Job titles loaded successfully")
+
+        # Load users
+        Logger.info(message=f"Loading users...")
         load_users(db_session=self.db_session, users_df=self.data)
+        Logger.info(message=f"Users loaded successfully")

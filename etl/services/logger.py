@@ -8,9 +8,9 @@ from etl.config import PROJECT_NAME, SERVICE_NAME
 
 
 class Logger:
-    _project = PROJECT_NAME
-    _service = SERVICE_NAME
+    logging.basicConfig()
     _logger = logging.getLogger(__name__)
+    _logger.setLevel(logging.DEBUG)
 
     def __new__(cls):
         return cls
@@ -24,7 +24,6 @@ class Logger:
         multiple_errors: dict = None,
     ):
         """Log an error message with the standard output format."""
-        cls._logger.setLevel(logging.ERROR)
         output = cls.output(
             logger_type="Error",
             message=message,
@@ -39,7 +38,6 @@ class Logger:
         cls, message: str, code: str = None, additional_information: dict = None
     ):
         """Log a warning message with the standard output format."""
-        cls._logger.setLevel(logging.WARNING)
         output = cls.output(
             logger_type="Warning",
             message=message,
@@ -51,7 +49,6 @@ class Logger:
     @classmethod
     def debug(cls, message: str, code: str = None, additional_information: dict = None):
         """Log a debug message with the standard output format."""
-        cls._logger.setLevel(logging.DEBUG)
         output = cls.output(
             logger_type="Debug",
             message=message,
@@ -63,7 +60,6 @@ class Logger:
     @classmethod
     def info(cls, message: str, code: str = None, additional_information: dict = None):
         """Log an information message with the standard output format."""
-        cls._logger.setLevel(logging.INFO)
         output = cls.output(
             logger_type="Info",
             message=message,
@@ -82,11 +78,13 @@ class Logger:
         list_items: list = None,
     ):
         """Output message with code and value."""
-        output = f"{datetime.now()} - {logger_type} in {cls._project}:{cls._service};"
+        output = f"{datetime.now()} - {logger_type} in {PROJECT_NAME}:{SERVICE_NAME} - "
 
         if code:
-            output = output + f"\n{logger_type} code: {code};"
-        output + f"\nMessage: {message}"
+            output = output + f"\n{logger_type} code: {code};\n"
+
+        output += f"{message}"
+
         if additional_information:
             output = output + f"\nAdditional information: {additional_information};"
         if list_items:
