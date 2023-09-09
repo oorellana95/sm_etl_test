@@ -1,7 +1,7 @@
 """
 Rating data SQLAlchemy model
 """
-from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, String
+from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, Text
 
 from etl.services.database import Base
 
@@ -16,5 +16,5 @@ class Rating(Base):
     valuation = Column(
         Integer, CheckConstraint("0<=`valuation` AND `valuation`<=5"), nullable=False
     )
-    review = Column(String(255), nullable=True)
+    review = Column(Text, nullable=True)
     submitted_at = Column(Date, nullable=False)

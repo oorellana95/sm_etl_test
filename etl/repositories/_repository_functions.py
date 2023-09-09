@@ -51,7 +51,7 @@ def apply_session_rollback_decorator(func):
 
 
 @apply_session_rollback_decorator
-def upsert_data(db_session, new_entries, model, primary_key_names):
+def upsert_data(db_session, new_entries, model, primary_key_names=("id",)):
     """Function to upsert new entries into the database"""
     existing_entries_dict = _query_existing_entries_dict(
         db_session, model, primary_key_names, new_entries

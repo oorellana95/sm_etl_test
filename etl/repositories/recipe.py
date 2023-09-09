@@ -21,20 +21,23 @@ def load_recipes(db_session, recipes_df: pd.DataFrame):
     _upsert_recipes_and_associations(db_session, processed_df)
 
 
+def fetch_recipe_ids(db_session):
+    return [
+        result[0] for result in db_session.query(Recipe.id.label("id_recipe")).all()
+    ]
+
+
 def _handle_recipes_missing_mandatory_values(recipes_df):
     """Handle recipes with missing mandatory values"""
     recipes_df_with_nan = recipes_df[recipes_df.isna().any(axis=1)]
-
-    if not recipes_df_with_nan.empty:
-        Logger.warning(
-            f"There are {len(recipes_df_with_nan)} recipes missing mandatory values"
-        )
+    invalid_recipes_count = len(recipes_df_with_nan)
+    if invalid_recipes_count:
         file_path = save_dataframe_to_timestamped_csv(
             df=recipes_df_with_nan,
-            filename_prefix="recipes_missing_mandatory_values",
+            filename_prefix=f"{invalid_recipes_count}_recipes_missing_mandatory_values",
         )
-        Logger.warning(
-            f"Recipes missing mandatory values have been added to {file_path} for further analysis."
+        Logger.error(
+            message=f"A total of {invalid_recipes_count} recipes missing mandatory values have been added to {file_path} for further analysis."
         )
 
 
@@ -58,12 +61,12 @@ def _preprocess_recipes_data(recipes_df):
     return processed_df
 
 
-def _upsert_recipes_and_associations(db_session, recipes_df):
+def _upsert_recipes_and_associations(db_session, processed_df):
     """Upserts recipes and associated data into the database"""
-    recipes_df = recipes_df[~recipes_df.isna().any(axis=1)]
-    _upsert_recipes(db_session, recipes_df)
-    _upsert_association_recipe_tags(db_session, recipes_df)
-    _upsert_association_recipe_ingredients(db_session, recipes_df)
+    processed_df = processed_df[~processed_df.isna().any(axis=1)]
+    _upsert_recipes(db_session, processed_df)
+    _upsert_association_recipe_tags(db_session, processed_df)
+    _upsert_association_recipe_ingredients(db_session, processed_df)
 
 
 def _upsert_recipes(db_session, recipes_df):
@@ -86,10 +89,6 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
     # Check if there are invalid recipes before proceeding with operations
     if not invalid_recipes_df.empty:
-        Logger.warning(
-            f"There are {len(invalid_recipes_df)} recipes with invalid user IDs."
-        )
-
         # Insert placeholder users and upsert data for invalid recipes
         insert_placeholder_users_into_db(
             db_session=db_session, new_entries=set(invalid_recipes_df["id_user"])
@@ -100,28 +99,30 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
         upsert_data(
             db_session=db_session, model=Recipe, new_entries=valid_recipe_entries
         )
-        Logger.warning(f"Blueprint users have been created with the corresponding ids.")
+        Logger.warning(
+            message=f"A total of {len(invalid_recipes_df)} blueprint users have been created with the corresponding ids."
+        )
 
         # Save the DataFrame to a CSV file with a timestamped filename
         file_path = save_dataframe_to_timestamped_csv(
             df=invalid_recipes_df, filename_prefix="recipes_with_invalid_id_user"
         )
         Logger.warning(
-            f"Recipes with invalid user IDs have been added to {file_path} for further analysis."
+            message=f"A total of {len(invalid_recipes_df)} recipes with invalid user IDs have been added to {file_path} for further analysis."
         )
 
 
 def _upsert_association_recipe_tags(db_session, recipes_df: pd.DataFrame):
-    """Upserts associations between recipes and tags"""
-    tag_df = pd.read_sql(
-        db_session.query(Tag.id.label("id_tag"), Tag.name.label("name_tag")).statement,
-        db_session.bind,
-    )
+    """Upsert associations between recipes and tags"""
+    tags_dic = {tag.name: tag.id for tag in db_session.query(Tag.id, Tag.name).all()}
 
     recipe_tag_mappings = []
+
     for index, recipe in recipes_df.iterrows():
-        for tag in eval(recipe["tags"]):
-            id_tag = tag_df.loc[tag_df["name_tag"] == tag, "id_tag"].values[0]
+        tags = eval(recipe["tags"])
+
+        for tag in tags:
+            id_tag = tags_dic.get(tag)
             id_recipe = recipe["id"]
             dictionary = {"id_recipe": id_recipe, "id_tag": id_tag}
             recipe_tag_mappings.append(dictionary)
@@ -134,22 +135,28 @@ def _upsert_association_recipe_tags(db_session, recipes_df: pd.DataFrame):
     )
 
 
-def _upsert_association_recipe_ingredients(db_session, recipes_df: pd.DataFrame):
-    """Upserts associations between recipes and ingredients."""
-    ingredient_df = pd.read_sql(
-        db_session.query(
-            Ingredient.id.label("id_ingredient"),
-            Ingredient.name.label("name_ingredient"),
-        ).statement,
+def fetch_tags_dataframe(db_session):
+    tags_database_df = pd.read_sql(
+        db_session.query(Tag.id.label("id_tag"), Tag.name.label("name_tag")).statement,
         db_session.bind,
     )
+    return tags_database_df
+
+
+def _upsert_association_recipe_ingredients(db_session, recipes_df: pd.DataFrame):
+    """Upserts associations between recipes and ingredients."""
+    ingredients_dic = {
+        ingredient.name: ingredient.id
+        for ingredient in db_session.query(Ingredient.id, Ingredient.name).all()
+    }
 
     recipe_ingredient_mappings = []
+
     for index, recipe in recipes_df.iterrows():
-        for ingredient in eval(recipe["ingredients"]):
-            id_ingredient = ingredient_df.loc[
-                ingredient_df["name_ingredient"] == ingredient, "id_ingredient"
-            ].values[0]
+        ingredients = eval(recipe["ingredients"])
+
+        for ingredient in ingredients:
+            id_ingredient = ingredients_dic.get(ingredient)
             id_recipe = recipe["id"]
             dictionary = {"id_recipe": id_recipe, "id_ingredient": id_ingredient}
             recipe_ingredient_mappings.append(dictionary)

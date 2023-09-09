@@ -61,7 +61,7 @@ CREATE TABLE `rating` (
   `id_user` int NOT NULL,
   `id_recipe` int NOT NULL,
   `valuation` int NOT NULL,
-  `review` varchar(255) DEFAULT NULL,
+  `review` text,
   `submitted_at` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`id_user`,`id_recipe`),
