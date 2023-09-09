@@ -9,7 +9,10 @@ from etl.process_file.users.user_repository import (
     insert_placeholder_users_into_db,
 )
 from etl.services.logger import Logger
-from etl.services.pandas.exports import handle_dataframe_missing_mandatory_values
+from etl.services.pandas.exports import (
+    handle_dataframe_missing_mandatory_values,
+    save_dataframe_to_timestamped_csv,
+)
 from etl.services.sql_alchemy.repository_functions import upsert_data
 
 
@@ -26,7 +29,9 @@ def load_ratings(db_session, ratings_df: pd.DataFrame):
 
 def _filter_invalid_ratings(processed_df, existing_recipe_ids):
     """Filter out invalid ratings"""
-    handle_dataframe_missing_mandatory_values(df=processed_df, prefix_filename="ratings")
+    handle_dataframe_missing_mandatory_values(
+        df=processed_df, prefix_filename="ratings"
+    )
     processed_df = processed_df[~processed_df.isna().any(axis=1)]
     _handle_ratings_with_invalid_id_recipe(processed_df, existing_recipe_ids)
     valid_ratings_df = processed_df[processed_df["id_recipe"].isin(existing_recipe_ids)]
@@ -38,14 +43,14 @@ def _handle_ratings_with_invalid_id_recipe(ratings_df, existing_recipe_ids):
     invalid_ratings_df = ratings_df[~ratings_df["id_recipe"].isin(existing_recipe_ids)]
     invalid_ratings_count = len(invalid_ratings_df)
     if invalid_ratings_count:
-        Logger.error(
+        Logger.warning(
             message=f"There are {invalid_ratings_count} ratings with invalid recipe IDs."
         )
         file_path = save_dataframe_to_timestamped_csv(
             df=invalid_ratings_df,
             filename_prefix=f"{invalid_ratings_count}_ratings_with_invalid_id_recipe",
         )
-        Logger.error(
+        Logger.warning(
             message=f"Ratings with invalid recipe IDs have been added to {file_path} for further analysis."
         )
 

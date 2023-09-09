@@ -4,7 +4,7 @@ Logger Class
 import logging
 from datetime import datetime
 
-from etl.config import PROJECT_NAME, SERVICE_NAME, LOGGER_LEVEL
+from etl.config import LOGGER_LEVEL, PROJECT_NAME, SERVICE_NAME
 
 
 class Logger:

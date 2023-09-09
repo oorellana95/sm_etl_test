@@ -22,7 +22,9 @@ from etl.services.sql_alchemy.repository_functions import upsert_data
 def load_recipes(db_session, recipes_df: pd.DataFrame):
     """The main function that orchestrates the entire process of loading recipes into the database"""
     processed_df = _preprocess_recipes_data(recipes_df)
-    handle_dataframe_missing_mandatory_values(df=processed_df, prefix_filename="recipes")
+    handle_dataframe_missing_mandatory_values(
+        df=processed_df, prefix_filename="recipes"
+    )
     _upsert_recipes_and_associations(db_session, processed_df)
 
 
