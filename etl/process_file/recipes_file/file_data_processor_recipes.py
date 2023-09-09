@@ -88,13 +88,22 @@ class FileDataProcessorRecipes(FileDataProcessor):
         """Load data from the file, creating and updating tags, ingredients, recipes_file and its relationships"""
         # Load tags
         Logger.info(message=f"Loading tags...")
-        tags = evaluate_and_flatten_nested_lists_with_error_handling(self.data["tags"])
+        tags = evaluate_and_flatten_nested_lists_with_error_handling(
+            self.data["tags"]
+        ).get(
+            "flattened_list"
+        )  # TODO handle errors related with tags
+
         load_tags(db_session=self.db_session, tags=tags)
         Logger.info(message=f"Tags loaded successfully")
 
         # Load ingredients
         Logger.info(message=f"Loading ingredients...")
-        ingredients = evaluate_and_flatten_nested_lists_with_error_handling(self.data["ingredients"])
+        ingredients = evaluate_and_flatten_nested_lists_with_error_handling(
+            self.data["ingredients"]
+        ).get(
+            "flattened_list"
+        )  # TODO handle errors related with the ingredients
         load_ingredients(db_session=self.db_session, ingredients=ingredients)
         Logger.info(message=f"Ingredients loaded successfully")
 
