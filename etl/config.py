@@ -5,6 +5,7 @@ import os
 # General
 PROJECT_NAME: str = "sm_etl_test"
 SERVICE_NAME: str = "ETL_Service"
+LOGGER_LEVEL: str = "INFO"
 
 # Files
 PATH_ROOT_DIR = os.path.abspath("")
@@ -22,4 +23,4 @@ DATABASE_PORT: int = 3306
 DATABASE_USER: str = "master"
 DATABASE_PASSWORD: str = "pass"
 DATABASE_NAME: str = "culinary_recipes_mysql"
-DATABASE_BATCH_SIZE: int = 1000
+DATABASE_BATCH_SIZE: int = 10000

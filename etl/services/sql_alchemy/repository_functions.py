@@ -30,7 +30,6 @@ def apply_session_rollback_decorator(func):
                 # Split the data into batches
                 func(db_session=db_session, new_entries=batch, *args, **kwargs)
                 db_session.commit()
-                Logger.debug({"batch": f"{i}:{i + DATABASE_BATCH_SIZE}"})
             except Exception as e:
                 # In case of an error, rollback any changes made to the database
                 db_session.rollback()

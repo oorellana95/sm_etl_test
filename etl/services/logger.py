@@ -4,13 +4,13 @@ Logger Class
 import logging
 from datetime import datetime
 
-from etl.config import PROJECT_NAME, SERVICE_NAME
+from etl.config import PROJECT_NAME, SERVICE_NAME, LOGGER_LEVEL
 
 
 class Logger:
     logging.basicConfig()
     _logger = logging.getLogger(__name__)
-    _logger.setLevel(logging.DEBUG)
+    _logger.setLevel(LOGGER_LEVEL)
 
     def __new__(cls):
         return cls
