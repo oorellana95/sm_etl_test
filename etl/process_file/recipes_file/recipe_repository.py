@@ -15,14 +15,14 @@ from etl.process_file.users.user_repository import (
     insert_placeholder_users_into_db,
 )
 from etl.services.logger import Logger
-from etl.services.pandas.exports import save_dataframe_to_timestamped_csv
+from etl.services.pandas.exports import handle_dataframe_missing_mandatory_values
 from etl.services.sql_alchemy.repository_functions import upsert_data
 
 
 def load_recipes(db_session, recipes_df: pd.DataFrame):
     """The main function that orchestrates the entire process of loading recipes into the database"""
     processed_df = _preprocess_recipes_data(recipes_df)
-    _handle_recipes_missing_mandatory_values(processed_df)
+    handle_dataframe_missing_mandatory_values(df=processed_df, prefix_filename="recipes")
     _upsert_recipes_and_associations(db_session, processed_df)
 
 
@@ -30,20 +30,6 @@ def fetch_recipe_ids(db_session):
     return [
         result[0] for result in db_session.query(Recipe.id.label("id_recipe")).all()
     ]
-
-
-def _handle_recipes_missing_mandatory_values(recipes_df):
-    """Handle recipes_file with missing mandatory values"""
-    recipes_df_with_nan = recipes_df[recipes_df.isna().any(axis=1)]
-    invalid_recipes_count = len(recipes_df_with_nan)
-    if invalid_recipes_count:
-        file_path = save_dataframe_to_timestamped_csv(
-            df=recipes_df_with_nan,
-            filename_prefix=f"{invalid_recipes_count}_recipes_missing_mandatory_values",
-        )
-        Logger.error(
-            message=f"A total of {invalid_recipes_count} recipes_file missing mandatory values have been added to {file_path} for further analysis."
-        )
 
 
 def _preprocess_recipes_data(recipes_df):

@@ -4,6 +4,7 @@ User repository module
 import pandas as pd
 from etl.process_file.users.job_title.job_title_model import JobTitle
 from etl.process_file.users.user_model import User, placeholder_not_specified_user
+from etl.services.pandas.exports import handle_dataframe_missing_mandatory_values
 from etl.services.sql_alchemy.repository_functions import (
     apply_session_rollback_decorator,
     upsert_data,
@@ -24,6 +25,7 @@ def insert_placeholder_users_into_db(db_session, new_entries):
 
 def load_users(db_session, users_df: pd.DataFrame):
     users_df = _merge_id_job_titles(db_session, users_df)
+    handle_dataframe_missing_mandatory_values(df=users_df, prefix_filename="users")
     entries = users_df.to_dict(orient="records")
     upsert_data(db_session=db_session, model=User, new_entries=entries)
 
