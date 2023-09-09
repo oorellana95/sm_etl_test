@@ -1,8 +1,9 @@
 # Database Definitions
 
 ## Schema: culinary_recipes_mysql
-- **Description**: This database schema stores information related to culinary recipes, users, ratings, ingredients, and tags.
-- **Additional notes**: In this case, the mysql post-fix indicated the relational database management systems (RDBMS).
+This database schema stores information related to culinary recipes, users, ratings, ingredients, and tags. The mysql post-fix indicated the relational database management systems (RDBMS).
+
+![Alt Text](schema.png)
 
 ### Table: `job_title`
 - **Description**: This table stores job titles.

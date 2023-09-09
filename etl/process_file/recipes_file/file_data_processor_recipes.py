@@ -14,7 +14,7 @@ from etl.process_file.recipes_file.ingredients.ingredient_repository import (
 from etl.process_file.recipes_file.recipe_repository import load_recipes
 from etl.process_file.recipes_file.tags.tag_repository import load_tags
 from etl.services.general_functions.list_evaluation_utils import (
-    evaluate_and_flatten_nested_lists,
+    evaluate_and_flatten_nested_lists_with_error_handling,
 )
 from etl.services.general_functions.validation import (
     contains_all_dates,
@@ -88,13 +88,13 @@ class FileDataProcessorRecipes(FileDataProcessor):
         """Load data from the file, creating and updating tags, ingredients, recipes_file and its relationships"""
         # Load tags
         Logger.info(message=f"Loading tags...")
-        tags = evaluate_and_flatten_nested_lists(self.data["tags"])
+        tags = evaluate_and_flatten_nested_lists_with_error_handling(self.data["tags"])
         load_tags(db_session=self.db_session, tags=tags)
         Logger.info(message=f"Tags loaded successfully")
 
         # Load ingredients
         Logger.info(message=f"Loading ingredients...")
-        ingredients = evaluate_and_flatten_nested_lists(self.data["ingredients"])
+        ingredients = evaluate_and_flatten_nested_lists_with_error_handling(self.data["ingredients"])
         load_ingredients(db_session=self.db_session, ingredients=ingredients)
         Logger.info(message=f"Ingredients loaded successfully")
 
