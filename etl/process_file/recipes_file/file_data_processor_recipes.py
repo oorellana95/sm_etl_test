@@ -8,18 +8,21 @@ from etl.exceptions.file_processing_exeptions.extract_validation_file_processing
 )
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
-from etl.repositories.recipe import load_recipes
-from etl.repositories.unique_name_table import load_ingredients, load_tags
-from etl.services.logger import Logger
-from etl.tools.functions.general.list_evaluation_utils import (
+from etl.process_file.recipes_file.ingredients.ingredient_repository import (
+    load_ingredients,
+)
+from etl.process_file.recipes_file.recipe_repository import load_recipes
+from etl.process_file.recipes_file.tags.tag_repository import load_tags
+from etl.services.general_functions.list_evaluation_utils import (
     evaluate_and_flatten_nested_lists,
 )
-from etl.tools.functions.general.validation import (
+from etl.services.general_functions.validation import (
     contains_all_dates,
     contains_list_of_floats,
     contains_list_of_strings,
 )
-from etl.tools.functions.pandas.validation import check_array_str_lengths
+from etl.services.logger import Logger
+from etl.services.pandas.validation import check_array_str_lengths
 
 
 class FileDataProcessorRecipes(FileDataProcessor):
@@ -82,7 +85,7 @@ class FileDataProcessorRecipes(FileDataProcessor):
             )
 
     def load_data(self):
-        """Load data from the file, creating and updating tags, ingredients, recipes and its relationships"""
+        """Load data from the file, creating and updating tags, ingredients, recipes_file and its relationships"""
         # Load tags
         Logger.info(message=f"Loading tags...")
         tags = evaluate_and_flatten_nested_lists(self.data["tags"])
@@ -95,7 +98,7 @@ class FileDataProcessorRecipes(FileDataProcessor):
         load_ingredients(db_session=self.db_session, ingredients=ingredients)
         Logger.info(message=f"Ingredients loaded successfully")
 
-        # Load recipes and associative tables (recipe_tag, recipe_ingredient)
+        # Load recipes_file and associative tables (recipe_tag, recipe_ingredient)
         Logger.info(message=f"Loading recipes and associated data...")
         load_recipes(db_session=self.db_session, recipes_df=self.data)
         Logger.info(message=f"Recipes and associated data loaded successfully")

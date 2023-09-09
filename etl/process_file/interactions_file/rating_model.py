@@ -3,7 +3,7 @@ Rating data SQLAlchemy model
 """
 from sqlalchemy import CheckConstraint, Column, Date, ForeignKey, Integer, Text
 
-from etl.services.database import Base
+from etl.services.sql_alchemy.database import Base
 
 
 class Rating(Base):
@@ -18,3 +18,14 @@ class Rating(Base):
     )
     review = Column(Text, nullable=True)
     submitted_at = Column(Date, nullable=False)
+
+    def to_dict(self):
+        """Convert Rating object to a dictionary."""
+        return {
+            "id": self.id,
+            "id_user": self.id_user,
+            "id_recipe": self.id_recipe,
+            "valuation": self.valuation,
+            "review": self.review,
+            "submitted_at": str(self.submitted_at),  # Convert Date to string if needed
+        }

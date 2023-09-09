@@ -6,12 +6,12 @@ Custom class inherited from the FileDataProcessor Class with the Interactions sp
 from etl.config import RAW_INTERACTIONS_PATH
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
-from etl.repositories.rating import load_ratings
-from etl.services.logger import Logger
-from etl.tools.functions.general.validation import (
+from etl.process_file.interactions_file.rating_repository import load_ratings
+from etl.services.general_functions.validation import (
     contains_all_dates,
     contains_all_valid_ranking_numbers,
 )
+from etl.services.logger import Logger
 
 
 class FileDataProcessorInteractions(FileDataProcessor):

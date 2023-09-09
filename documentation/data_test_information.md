@@ -85,14 +85,6 @@ The RAW_users.csv dataset contains diverse user profiles, including individuals 
 
 ---
 
-user id,encoded id,first name,last name,Sex,email,phone,date of birth,job title
-1,4defE49671cF860,Sydney,Shannon,Male,tvang@example.net,574-440-1423x9799,2020-07-09,Technical brewer
-2,F89B87bCf8f210b,Regina,Lin,Male,helen14@example.net,001-273-664-2268x90121,1909-06-20,"Teacher, adult education"
-3,Cad6052BDd5DEaf,Pamela,Blake,Female,brent05@example.org,927-880-5785x85266,1964-08-19,Armed forces operational officer
-4,e83E46f80f629CD,Dave,Hoffman,Female,munozcraig@example.org,001-147-429-8340x608,2009-02-19,Ship broker
-5,60AAc4DcaBcE3b6,Ian,Campos,Female,brownevelyn@example.net,166-126-4390,1997-10-02,Media planner
-6,7ACb92d81A42fdf,Valerie,Patel,Male,muellerjoel@example.net,001-379-612-1298x853,2021-04-07,"Engineer, materials"
-
 
 ## Attribute considerations across the files 
 

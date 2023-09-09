@@ -4,6 +4,7 @@ from etl.config import DATABASE_BATCH_SIZE
 from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
     DatabaseTransactionError,
 )
+from etl.services.logger import Logger
 
 
 def apply_session_rollback_decorator(func):
@@ -29,6 +30,7 @@ def apply_session_rollback_decorator(func):
                 # Split the data into batches
                 func(db_session=db_session, new_entries=batch, *args, **kwargs)
                 db_session.commit()
+                Logger.debug({"batch": f"{i}:{i + DATABASE_BATCH_SIZE}"})
             except Exception as e:
                 # In case of an error, rollback any changes made to the database
                 db_session.rollback()
@@ -50,6 +52,20 @@ def apply_session_rollback_decorator(func):
     return wrapper
 
 
+def find_missing_entries(db_session, model, entries):
+    """Find missing entities that do not exist in the table"""
+    existing_names = [item.name for item in db_session.query(model).all()]
+    missing_entities = set(entries) - set(existing_names)
+    return missing_entities
+
+
+@apply_session_rollback_decorator
+def insert_missing_entries(db_session, model, new_entries):
+    """Insert missing entries into the table"""
+    new_rows = [model(name=entry) for entry in new_entries]
+    db_session.add_all(new_rows)
+
+
 @apply_session_rollback_decorator
 def upsert_data(db_session, new_entries, model, primary_key_names=("id",)):
     """Function to upsert new entries into the database"""
@@ -64,9 +80,10 @@ def upsert_data(db_session, new_entries, model, primary_key_names=("id",)):
         existing_entry = existing_entries_dict.get(primary_key_values)
 
         if existing_entry:
-            # Update existing entry with new data
-            for key, value in new_entry.items():
-                setattr(existing_entry, key, value)
+            # Check if any attributes of the existing entry differ from the new entry and update if they differ
+            if existing_entry.to_dict() != new_entry:
+                for key, value in new_entry.items():
+                    setattr(existing_entry, key, value)
         else:
             # Add new entry to the list for bulk insertion
             entries_to_insert.append(new_entry)

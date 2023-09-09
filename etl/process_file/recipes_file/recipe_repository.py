@@ -3,15 +3,20 @@ Recipe repository module
 """
 
 import pandas as pd
-from etl.models.ingredient import Ingredient
-from etl.models.recipe import Recipe
-from etl.models.recipe_ingredient import RecipeIngredient
-from etl.models.recipe_tag import RecipeTag
-from etl.models.tag import Tag
-from etl.repositories._repository_functions import upsert_data
-from etl.repositories.user import fetch_user_ids, insert_placeholder_users_into_db
-from etl.services.exports import save_dataframe_to_timestamped_csv
+from etl.process_file.recipes_file.ingredients.ingredient_model import Ingredient
+from etl.process_file.recipes_file.ingredients.recipe_ingredient_model import (
+    RecipeIngredient,
+)
+from etl.process_file.recipes_file.recipe_model import Recipe
+from etl.process_file.recipes_file.tags.recipe_tag_model import RecipeTag
+from etl.process_file.recipes_file.tags.tag_model import Tag
+from etl.process_file.users.user_repository import (
+    fetch_user_ids,
+    insert_placeholder_users_into_db,
+)
 from etl.services.logger import Logger
+from etl.services.pandas.exports import save_dataframe_to_timestamped_csv
+from etl.services.sql_alchemy.repository_functions import upsert_data
 
 
 def load_recipes(db_session, recipes_df: pd.DataFrame):
@@ -28,7 +33,7 @@ def fetch_recipe_ids(db_session):
 
 
 def _handle_recipes_missing_mandatory_values(recipes_df):
-    """Handle recipes with missing mandatory values"""
+    """Handle recipes_file with missing mandatory values"""
     recipes_df_with_nan = recipes_df[recipes_df.isna().any(axis=1)]
     invalid_recipes_count = len(recipes_df_with_nan)
     if invalid_recipes_count:
@@ -37,12 +42,12 @@ def _handle_recipes_missing_mandatory_values(recipes_df):
             filename_prefix=f"{invalid_recipes_count}_recipes_missing_mandatory_values",
         )
         Logger.error(
-            message=f"A total of {invalid_recipes_count} recipes missing mandatory values have been added to {file_path} for further analysis."
+            message=f"A total of {invalid_recipes_count} recipes_file missing mandatory values have been added to {file_path} for further analysis."
         )
 
 
 def _preprocess_recipes_data(recipes_df):
-    """Preprocess recipes DataFrame for loading into the database"""
+    """Preprocess recipes_file DataFrame for loading into the database"""
     processed_df = recipes_df.drop(columns=["n_steps", "n_ingredients"])
     processed_df = processed_df.rename(
         columns={
@@ -62,7 +67,7 @@ def _preprocess_recipes_data(recipes_df):
 
 
 def _upsert_recipes_and_associations(db_session, processed_df):
-    """Upserts recipes and associated data into the database"""
+    """Upserts recipes_file and associated data into the database"""
     processed_df = processed_df[~processed_df.isna().any(axis=1)]
     _upsert_recipes(db_session, processed_df)
     _upsert_association_recipe_tags(db_session, processed_df)
@@ -70,26 +75,26 @@ def _upsert_recipes_and_associations(db_session, processed_df):
 
 
 def _upsert_recipes(db_session, recipes_df):
-    """Upsert recipes into the database"""
+    """Upsert recipes_file into the database"""
     existing_user_ids = fetch_user_ids(db_session)
     _upsert_recipes_with_valid_id_user(db_session, recipes_df, existing_user_ids)
     _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_ids)
 
 
 def _upsert_recipes_with_valid_id_user(db_session, recipes_df, existing_user_ids):
-    """Upsert valid recipes with existing user IDs"""
+    """Upsert valid recipes_file with existing user IDs"""
     valid_recipes_df = recipes_df[recipes_df["id_user"].isin(existing_user_ids)]
     valid_recipe_entries = valid_recipes_df.to_dict(orient="records")
     upsert_data(db_session=db_session, model=Recipe, new_entries=valid_recipe_entries)
 
 
 def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_ids):
-    """Handle recipes with invalid user IDs"""
+    """Handle recipes_file with invalid user IDs"""
     invalid_recipes_df = recipes_df[~recipes_df["id_user"].isin(existing_user_ids)]
 
-    # Check if there are invalid recipes before proceeding with operations
+    # Check if there are invalid recipes_file before proceeding with operations
     if not invalid_recipes_df.empty:
-        # Insert placeholder users and upsert data for invalid recipes
+        # Insert placeholder users and upsert data for invalid recipes_file
         insert_placeholder_users_into_db(
             db_session=db_session, new_entries=set(invalid_recipes_df["id_user"])
         )
@@ -105,15 +110,16 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
         # Save the DataFrame to a CSV file with a timestamped filename
         file_path = save_dataframe_to_timestamped_csv(
-            df=invalid_recipes_df, filename_prefix=f"{len(invalid_recipes_df)}_recipes_with_invalid_id_user"
+            df=invalid_recipes_df,
+            filename_prefix=f"{len(invalid_recipes_df)}_recipes_with_invalid_id_user",
         )
         Logger.warning(
-            message=f"A total of {len(invalid_recipes_df)} recipes with invalid user IDs have been added to {file_path} for further analysis."
+            message=f"A total of {len(invalid_recipes_df)} recipes_file with invalid user IDs have been added to {file_path} for further analysis."
         )
 
 
 def _upsert_association_recipe_tags(db_session, recipes_df: pd.DataFrame):
-    """Upsert associations between recipes and tags"""
+    """Upsert associations between recipes_file and tags"""
     tags_dic = {tag.name: tag.id for tag in db_session.query(Tag.id, Tag.name).all()}
 
     recipe_tag_mappings = []
@@ -144,7 +150,7 @@ def fetch_tags_dataframe(db_session):
 
 
 def _upsert_association_recipe_ingredients(db_session, recipes_df: pd.DataFrame):
-    """Upserts associations between recipes and ingredients."""
+    """Upserts associations between recipes_file and ingredients."""
     ingredients_dic = {
         ingredient.name: ingredient.id
         for ingredient in db_session.query(Ingredient.id, Ingredient.name).all()

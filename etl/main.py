@@ -1,11 +1,13 @@
 from etl.exceptions.sm_etl_test_exception import SmEtlTestException
-from etl.process_file.file_data_processor_interactions import (
+from etl.process_file.interactions_file.file_data_processor_interactions import (
     FileDataProcessorInteractions,
 )
-from etl.process_file.file_data_processor_recipes import FileDataProcessorRecipes
-from etl.process_file.file_data_processor_users import FileDataProcessorUsers
-from etl.services.database import create_database_session
+from etl.process_file.recipes_file.file_data_processor_recipes import (
+    FileDataProcessorRecipes,
+)
+from etl.process_file.users.file_data_processor_users import FileDataProcessorUsers
 from etl.services.logger import Logger
+from etl.services.sql_alchemy.database import create_database_session
 
 if __name__ == "__main__":
     with create_database_session() as db:

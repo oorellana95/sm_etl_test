@@ -2,9 +2,9 @@
 User repository module
 """
 import pandas as pd
-from etl.models.job_title import JobTitle
-from etl.models.user import User, placeholder_not_specified_user
-from etl.repositories._repository_functions import (
+from etl.process_file.users.job_title.job_title_model import JobTitle
+from etl.process_file.users.user_model import User, placeholder_not_specified_user
+from etl.services.sql_alchemy.repository_functions import (
     apply_session_rollback_decorator,
     upsert_data,
 )

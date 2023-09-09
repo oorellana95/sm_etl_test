@@ -1,6 +1,6 @@
 """
 Validation functions - General module
-The functions are all meant to check specific type of data or lengths. They can expect a list or just a single value.
+The functions are all meant to check specific type of data, lengths or compare.
 """
 import datetime
 import re

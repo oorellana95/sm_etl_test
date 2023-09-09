@@ -2,12 +2,15 @@
 Rating repository module
 """
 import pandas as pd
-from etl.models.rating import Rating
-from etl.repositories._repository_functions import upsert_data
-from etl.repositories.recipe import fetch_recipe_ids
-from etl.repositories.user import fetch_user_ids, insert_placeholder_users_into_db
-from etl.services.exports import save_dataframe_to_timestamped_csv
+from etl.process_file.interactions_file.rating_model import Rating
+from etl.process_file.recipes_file.recipe_repository import fetch_recipe_ids
+from etl.process_file.users.user_repository import (
+    fetch_user_ids,
+    insert_placeholder_users_into_db,
+)
 from etl.services.logger import Logger
+from etl.services.pandas.exports import save_dataframe_to_timestamped_csv
+from etl.services.sql_alchemy.repository_functions import upsert_data
 
 
 def load_ratings(db_session, ratings_df: pd.DataFrame):
@@ -112,7 +115,8 @@ def _handle_ratings_with_invalid_id_user(db_session, ratings_df, existing_user_i
 
         # Save the DataFrame to a CSV file with a timestamped filename
         file_path = save_dataframe_to_timestamped_csv(
-            df=invalid_ratings_df, filename_prefix=f"{len(invalid_ratings_count)}_ratings_with_invalid_id_user"
+            df=invalid_ratings_df,
+            filename_prefix=f"{invalid_ratings_count}_ratings_with_invalid_id_user",
         )
         Logger.warning(
             message=f"A total of {invalid_ratings_count} ratings with invalid user IDs have been added to {file_path} for further analysis."
