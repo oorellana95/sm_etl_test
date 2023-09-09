@@ -112,7 +112,7 @@ def _handle_ratings_with_invalid_id_user(db_session, ratings_df, existing_user_i
 
         # Save the DataFrame to a CSV file with a timestamped filename
         file_path = save_dataframe_to_timestamped_csv(
-            df=invalid_ratings_df, filename_prefix="ratings_with_invalid_id_user"
+            df=invalid_ratings_df, filename_prefix=f"{len(invalid_ratings_count)}_ratings_with_invalid_id_user"
         )
         Logger.warning(
             message=f"A total of {invalid_ratings_count} ratings with invalid user IDs have been added to {file_path} for further analysis."

@@ -105,7 +105,7 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
         # Save the DataFrame to a CSV file with a timestamped filename
         file_path = save_dataframe_to_timestamped_csv(
-            df=invalid_recipes_df, filename_prefix="recipes_with_invalid_id_user"
+            df=invalid_recipes_df, filename_prefix=f"{len(invalid_recipes_df)}_recipes_with_invalid_id_user"
         )
         Logger.warning(
             message=f"A total of {len(invalid_recipes_df)} recipes with invalid user IDs have been added to {file_path} for further analysis."
