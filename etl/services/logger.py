@@ -4,13 +4,13 @@ Logger Class
 import logging
 from datetime import datetime
 
-from etl.config import LOGGER_LEVEL, PROJECT_NAME, SERVICE_NAME
+from etl.config import config
 
 
 class Logger:
     logging.basicConfig()
     _logger = logging.getLogger(__name__)
-    _logger.setLevel(LOGGER_LEVEL)
+    _logger.setLevel(config.general_config["LOGGER_LEVEL"])
 
     def __new__(cls):
         return cls
@@ -78,7 +78,7 @@ class Logger:
         list_items: list = None,
     ):
         """Output message with code and value."""
-        output = f"{datetime.now()} - {PROJECT_NAME}:{SERVICE_NAME} - "
+        output = f"{datetime.now()} - {config.general_config['PROJECT_NAME']}:{config.general_config['SERVICE_NAME']} - "
 
         if code:
             output = output + f"\n{logger_type} code: {code};\n"

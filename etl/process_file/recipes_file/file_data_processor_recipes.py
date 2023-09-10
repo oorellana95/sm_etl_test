@@ -2,7 +2,7 @@
 FileDataProcessorRecipes Class
 Custom class inherited from the FileDataProcessor Class with the Interactions specifications to process the file.
 """
-from etl.config import RAW_RECIPES_PATH
+from etl.config import config
 from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
     ArrayLengthMismatchControlNumberError,
 )
@@ -29,7 +29,7 @@ class FileDataProcessorRecipes(FileDataProcessor):
     def __init__(self, db_session):
         super().__init__(db_session)
         self.file_type = "csv"
-        self.file_path = RAW_RECIPES_PATH
+        self.file_path = config.files_config["RAW_RECIPES_CSV_PATH"]
         self.column_checkers = [
             ColumnChecker(name="name", value_type="object"),
             ColumnChecker(name="id", value_type="int"),

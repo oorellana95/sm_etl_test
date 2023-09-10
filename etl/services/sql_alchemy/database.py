@@ -7,22 +7,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from etl.config import (
-    DATABASE_DIALECT,
-    DATABASE_HOST,
-    DATABASE_NAME,
-    DATABASE_PASSWORD,
-    DATABASE_PORT,
-    DATABASE_USER,
-)
+from etl.config import config
 
 # Declarative base.
 Base = declarative_base()
 
 # Retrieve database uri
 database_uri = (
-    f"{DATABASE_DIALECT}://{DATABASE_USER}:{DATABASE_PASSWORD}"
-    f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+    f"{config.database_config['DATABASE_DIALECT']}://{config.database_config['DATABASE_USER']}:{config.database_config['DATABASE_PASSWORD']}"
+    f"@{config.database_config['DATABASE_HOST']}:{config.database_config['DATABASE_PORT']}/{config.database_config['DATABASE_NAME']}"
 )
 
 # Session local

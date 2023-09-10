@@ -1,26 +1,59 @@
+import configparser
 import os
 
-# Critical values should be SECRETS.
 
-# General
-PROJECT_NAME: str = "sm_etl_test"
-SERVICE_NAME: str = "ETL_Service"
-LOGGER_LEVEL: str = "INFO"
+class Config:
+    general_config = None
+    database_config = None
+    files_config = None
 
-# Files
-PATH_ROOT_DIR = os.path.abspath("")
-PATH_INPUT_DIR = os.path.join(PATH_ROOT_DIR, "data_test/input")
-RAW_USERS_PATH = os.path.join(PATH_INPUT_DIR, "RAW_users.csv")
-RAW_RECIPES_PATH = os.path.join(PATH_INPUT_DIR, "RAW_recipes.csv")
-RAW_INTERACTIONS_PATH = os.path.join(PATH_INPUT_DIR, "RAW_interactions.csv")
+    def __init__(self):
+        self.load_ini_config()
 
-PATH_OUTPUT_DIR = os.path.join(PATH_ROOT_DIR, "data_test/output")
+    def load_ini_config(self):
+        _config = configparser.ConfigParser()
+        _config.read("config.ini")
 
-# Database
-DATABASE_DIALECT: str = "mysql+pymysql"
-DATABASE_HOST: str = "localhost"
-DATABASE_PORT: int = 3306
-DATABASE_USER: str = "master"
-DATABASE_PASSWORD: str = "pass"
-DATABASE_NAME: str = "culinary_recipes_mysql"
-DATABASE_BATCH_SIZE: int = 10000
+        self.general_config = {
+            "PROJECT_NAME": _config.get("general", "project_name"),
+            "SERVICE_NAME": _config.get("general", "service_name"),
+            "LOGGER_LEVEL": _config.get("general", "logger_level"),
+            "ENVIRONMENT": _config.get("general", "environment"),
+        }
+
+        self.database_config = {
+            "DATABASE_DIALECT": _config.get("database", "dialect"),
+            "DATABASE_HOST": _config.get("database", "host"),
+            "DATABASE_PORT": int(_config.get("database", "port")),
+            "DATABASE_USER": _config.get("database", "user"),
+            "DATABASE_PASSWORD": _config.get("database", "password"),
+            "DATABASE_NAME": _config.get("database", "name"),
+            "DATABASE_BATCH_SIZE": int(_config.get("database", "batch_size")),
+        }
+
+        if self.general_config["ENVIRONMENT"] == "local":
+            root_dir_path = os.path.abspath("")
+            input_dir_path = os.path.join(root_dir_path, "data_test/input")
+            self.files_config = {
+                "RAW_USERS_CSV_PATH": os.path.join(input_dir_path, "RAW_users.csv"),
+                "RAW_RECIPES_CSV_PATH": os.path.join(input_dir_path, "RAW_recipes.csv"),
+                "RAW_INTERACTIONS_CSV_PATH": os.path.join(
+                    input_dir_path, "RAW_interactions.csv"
+                ),
+                "ERROR_OUTPUT_DIR_PATH": os.path.join(
+                    root_dir_path, "data_test/output"
+                ),
+            }
+        else:
+            self.files_config = {
+                "RAW_USERS_CSV_PATH": _config.get("files", "raw_users_csv_path"),
+                "RAW_RECIPES_CSV_PATH": _config.get("files", "raw_recipes_csv_path"),
+                "RAW_INTERACTIONS_CSV_PATH": int(
+                    _config.get("files", "raw_interactions_csv_path")
+                ),
+                "ERROR_OUTPUT_DIR_PATH": _config.get("files", "error_output_dir_path"),
+            }
+
+
+# Create a global instance of the Config class
+config = Config()

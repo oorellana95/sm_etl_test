@@ -1,10 +1,9 @@
 from sqlalchemy import tuple_
 
-from etl.config import DATABASE_BATCH_SIZE
+from etl.config import config
 from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
     DatabaseTransactionError,
 )
-from etl.services.logger import Logger
 
 
 def apply_session_rollback_decorator(func):
@@ -23,8 +22,8 @@ def apply_session_rollback_decorator(func):
     def wrapper(db_session, new_entries, *args, **kwargs):
         errors = []
         new_entries_list = list(new_entries)
-        for i in range(0, len(new_entries), DATABASE_BATCH_SIZE):
-            batch = new_entries_list[i : i + DATABASE_BATCH_SIZE]
+        for i in range(0, len(new_entries), config.database_config['DATABASE_BATCH_SIZE']):
+            batch = new_entries_list[i : i + config.database_config['DATABASE_BATCH_SIZE']]
             errors = []
             try:
                 # Split the data into batches
@@ -36,7 +35,7 @@ def apply_session_rollback_decorator(func):
                 errors.append(
                     {
                         "error_number": len(errors),
-                        "batch": f"{i}:{i + DATABASE_BATCH_SIZE}",
+                        "batch": f"{i}:{i + config.database_config['DATABASE_BATCH_SIZE']}",
                         "error_message": e,
                     }
                 )

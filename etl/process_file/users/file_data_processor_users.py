@@ -2,8 +2,7 @@
 FileDataProcessorUsers Class
 Custom class inherited from the FileDataProcessor Class with the Interactions specifications to process the file.
 """
-
-from etl.config import RAW_USERS_PATH
+from etl.config import config
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
 from etl.process_file.users.job_title.job_title_repository import load_job_titles
@@ -20,7 +19,7 @@ class FileDataProcessorUsers(FileDataProcessor):
     def __init__(self, db_session):
         super().__init__(db_session)
         self.file_type = "csv"
-        self.file_path = RAW_USERS_PATH
+        self.file_path = config.files_config["RAW_USERS_CSV_PATH"]
         self.column_checkers = [
             ColumnChecker(name="user id", value_type="int"),
             ColumnChecker(name="encoded id", value_type="object"),
