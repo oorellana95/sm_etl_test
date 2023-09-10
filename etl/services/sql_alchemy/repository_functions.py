@@ -22,8 +22,12 @@ def apply_session_rollback_decorator(func):
     def wrapper(db_session, new_entries, *args, **kwargs):
         errors = []
         new_entries_list = list(new_entries)
-        for i in range(0, len(new_entries), config.database_config['DATABASE_BATCH_SIZE']):
-            batch = new_entries_list[i : i + config.database_config['DATABASE_BATCH_SIZE']]
+        for i in range(
+            0, len(new_entries), config.database_config["DATABASE_BATCH_SIZE"]
+        ):
+            batch = new_entries_list[
+                i : i + config.database_config["DATABASE_BATCH_SIZE"]
+            ]
             errors = []
             try:
                 # Split the data into batches
