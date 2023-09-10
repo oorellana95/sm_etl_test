@@ -1,6 +1,10 @@
 import pytest
 
-from etl.services.general_functions.validation import contains_list_of_floats, is_list_of_type, contains_list_of_strings
+from etl.services.general_functions.validation import (
+    contains_list_of_floats,
+    contains_list_of_strings,
+    is_list_of_type,
+)
 
 
 def test_valid_list_of_integers():
@@ -45,7 +49,7 @@ def test_contains_valid_list_of_strings():
 
 def test_contains_list_of_strings():
     """Check if contains_list_of_strings correctly raises a ValueError for an invalid list of strings."""
-    invalid_list_strings = ["['apple', 'banana']", 'cherry', "['fig']"]
+    invalid_list_strings = ["['apple', 'banana']", "cherry", "['fig']"]
     with pytest.raises(ValueError):
         contains_list_of_strings(invalid_list_strings)
 

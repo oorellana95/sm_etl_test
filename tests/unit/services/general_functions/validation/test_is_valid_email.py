@@ -1,6 +1,9 @@
 import pytest
 
-from etl.services.general_functions.validation import is_valid_email, contains_list_of_emails
+from etl.services.general_functions.validation import (
+    contains_list_of_emails,
+    is_valid_email,
+)
 
 
 def test_valid_email():
@@ -11,19 +14,25 @@ def test_valid_email():
 
 def test_invalid_email():
     """Test if an invalid email address raises a ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid email"):
+    with pytest.raises(
+        ValueError, match=r"Incorrect data format, should be a valid email"
+    ):
         is_valid_email("invalid-email")
 
 
 def test_missing_at_symbol():
     """Test if an email without the '@' symbol raises a ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid email"):
+    with pytest.raises(
+        ValueError, match=r"Incorrect data format, should be a valid email"
+    ):
         is_valid_email("example.com")
 
 
 def test_missing_dot_after_domain():
     """Test if an email without a dot after the domain raises a ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid email"):
+    with pytest.raises(
+        ValueError, match=r"Incorrect data format, should be a valid email"
+    ):
         is_valid_email("test@example")
 
 
@@ -39,5 +48,7 @@ def test_contains_valid_emails():
 
 def test_contains_invalid_email():
     """Test if a list containing an invalid email address raises a ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid email"):
+    with pytest.raises(
+        ValueError, match=r"Incorrect data format, should be a valid email"
+    ):
         contains_list_of_emails(["test@example.com", "invalid-email"])

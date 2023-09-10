@@ -1,5 +1,6 @@
 import pytest
-from etl.services.general_functions.validation import is_date, contains_all_dates
+
+from etl.services.general_functions.validation import contains_all_dates, is_date
 
 
 def test_valid_date():

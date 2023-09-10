@@ -1,4 +1,5 @@
 import pytest
+
 from etl.services.general_functions.validation import contains_all_valid_ranking_numbers
 
 

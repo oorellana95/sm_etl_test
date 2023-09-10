@@ -1,6 +1,9 @@
 import pytest
 
-from etl.services.general_functions.validation import is_valid_sex, contains_list_of_sex_values
+from etl.services.general_functions.validation import (
+    contains_list_of_sex_values,
+    is_valid_sex,
+)
 
 
 def test_valid_sex_male():
@@ -21,13 +24,19 @@ def test_valid_sex_case_insensitive():
 
 def test_invalid_sex():
     """Test if an invalid sex raises ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid sex \(male or female\)"):
+    with pytest.raises(
+        ValueError,
+        match=r"Incorrect data format, should be a valid sex \(male or female\)",
+    ):
         is_valid_sex("other")
 
 
 def test_empty_string():
     """Test if an empty string raises ValueError."""
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid sex \(male or female\)"):
+    with pytest.raises(
+        ValueError,
+        match=r"Incorrect data format, should be a valid sex \(male or female\)",
+    ):
         is_valid_sex("")
 
 
@@ -44,5 +53,8 @@ def test_contains_invalid_sex_value():
 
     The function should raise a ValueError when the input list contains an invalid sex value.
     """
-    with pytest.raises(ValueError, match=r"Incorrect data format, should be a valid sex \(male or female\)"):
+    with pytest.raises(
+        ValueError,
+        match=r"Incorrect data format, should be a valid sex \(male or female\)",
+    ):
         contains_list_of_sex_values(["male", "other", "female"])
