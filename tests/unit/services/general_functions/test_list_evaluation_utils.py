@@ -54,4 +54,6 @@ def test_single_input():
     """Valid input: Input contains only one string that can be evaluated."""
     input_list = ['["apple", "banana", "cherry"]']
     result = evaluate_and_flatten_nested_lists_with_error_handling(input_list)
-    assert result == {"flattened_list": ["apple", "banana", "cherry"], "errors": []}
+
+    expected_result = {"flattened_list": ["apple", "banana", "cherry"], "errors": []}
+    assert result == expected_result
