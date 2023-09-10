@@ -1,7 +1,7 @@
 **/.DS_Store
 **/___pycache__/
 /**/.pytest_cache/**
-data_test/input/**
-data_test/output/**
+data_local/input/**
+data_local/output/**
 /.idea
 /venv

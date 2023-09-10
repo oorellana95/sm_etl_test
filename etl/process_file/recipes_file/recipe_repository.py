@@ -15,7 +15,7 @@ from etl.process_file.users.user_repository import (
     insert_placeholder_users_into_db,
 )
 from etl.services.logger import Logger
-from etl.services.pandas.exports import handle_dataframe_missing_mandatory_values
+from etl.services.pandas.exports import handle_dataframe_missing_mandatory_values, save_dataframe_to_timestamped_csv
 from etl.services.sql_alchemy.repository_functions import upsert_data
 
 

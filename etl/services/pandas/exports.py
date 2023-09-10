@@ -21,6 +21,7 @@ def handle_dataframe_missing_mandatory_values(df, prefix_filename):
         Logger.warning(
             message=f"A total of {invalid_recipes_count} recipes_file missing mandatory values have been added to {file_path} for further analysis."
         )
+        return file_path
 
 
 def save_dataframe_to_timestamped_csv(df, filename_prefix="data"):

@@ -31,9 +31,9 @@ class Config:
             "DATABASE_BATCH_SIZE": int(_config.get("database", "batch_size")),
         }
 
-        if self.general_config["ENVIRONMENT"] == "local":
-            root_dir_path = os.path.abspath("")
-            input_dir_path = os.path.join(root_dir_path, "data_test/input")
+        if self.general_config["ENVIRONMENT"] in ("local", "test"):
+            working_dir_path = os.path.abspath("")
+            input_dir_path = os.path.join(working_dir_path, f"data_{self.general_config['ENVIRONMENT']}/input")
             self.files_config = {
                 "RAW_USERS_CSV_PATH": os.path.join(input_dir_path, "RAW_users.csv"),
                 "RAW_RECIPES_CSV_PATH": os.path.join(input_dir_path, "RAW_recipes.csv"),
@@ -41,7 +41,7 @@ class Config:
                     input_dir_path, "RAW_interactions.csv"
                 ),
                 "ERROR_OUTPUT_DIR_PATH": os.path.join(
-                    root_dir_path, "data_test/output"
+                    working_dir_path, f"data_{self.general_config['ENVIRONMENT']}/output"
                 ),
             }
         else:
