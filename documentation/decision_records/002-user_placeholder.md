@@ -1,4 +1,4 @@
-# Use SQLAlchemy ORM for ETL Project
+# Create placeholder users when handling unmatched user_id
 
 Status: Accepted
 

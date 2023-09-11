@@ -3,7 +3,7 @@
 ## Schema: culinary_recipes_mysql
 This database schema stores information related to culinary recipes, users, ratings, ingredients, and tags. The mysql post-fix indicated the relational database management systems (RDBMS).
 
-![Alt Text](schema.png)
+![Alt Text](../images/database-schema.png)
 
 ### Table: `job_title`
 - **Description**: This table stores job titles.

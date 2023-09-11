@@ -19,4 +19,5 @@ format: ## automatic source code formatter following a strict set of standards
 
 .PHONY: tests
 tests:
+	cd tests; \
 	pytest;

@@ -1,11 +1,20 @@
 import pytest
 
-from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import \
-    DatabaseLoadFileProcessingError, DatabaseTransactionError
-from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import \
-    ExtractValidationFileProcessingError, FileFormatNotAcceptedError, FileIsEmptyError, ColumnsNotFoundError, \
-    ColumnTypeError, ArrayLengthMismatchControlNumberError
-from etl.exceptions.file_processing_exeptions.file_processing_error import FileProcessingError
+from etl.exceptions.file_processing_exeptions.database_load_file_processing_error import (
+    DatabaseLoadFileProcessingError,
+    DatabaseTransactionError,
+)
+from etl.exceptions.file_processing_exeptions.extract_validation_file_processing_error import (
+    ArrayLengthMismatchControlNumberError,
+    ColumnsNotFoundError,
+    ColumnTypeError,
+    ExtractValidationFileProcessingError,
+    FileFormatNotAcceptedError,
+    FileIsEmptyError,
+)
+from etl.exceptions.file_processing_exeptions.file_processing_error import (
+    FileProcessingError,
+)
 from etl.exceptions.sm_etl_test_exception import SmEtlTestException
 
 
@@ -70,7 +79,9 @@ def test_database_transaction_error():
     with pytest.raises(DatabaseTransactionError) as excinfo:
         raise DatabaseTransactionError(message, additional_information=additional_info)
     assert str(excinfo.value) == message
-    assert excinfo.value.additional_information == {'additional_information': {'key1': 'value1', 'key2': 'value2'}}
+    assert excinfo.value.additional_information == {
+        "additional_information": {"key1": "value1", "key2": "value2"}
+    }
 
 
 def test_set_additional_information():
