@@ -4,7 +4,7 @@ Rating repository module
 import pandas as pd
 from etl.process_file.interactions_file.rating_model import Rating
 from etl.process_file.recipes_file.recipe_repository import fetch_recipe_ids
-from etl.process_file.users.user_repository import (
+from etl.process_file.users_file.user_repository import (
     fetch_user_ids,
     insert_placeholder_users_into_db,
 )
@@ -84,7 +84,7 @@ def _handle_ratings_with_invalid_id_user(db_session, ratings_df, existing_user_i
 
     # Check if there are invalid ratings before proceeding with operations
     if invalid_ratings_count:
-        # Insert placeholder users and upsert data for invalid ratings
+        # Insert placeholder users_file and upsert data for invalid ratings
         insert_placeholder_users_into_db(
             db_session=db_session, new_entries=set(invalid_ratings_df["id_user"])
         )
@@ -92,7 +92,7 @@ def _handle_ratings_with_invalid_id_user(db_session, ratings_df, existing_user_i
             message=f"A total of {invalid_ratings_count} blueprint users have been created with the corresponding ids."
         )
 
-        # Insert valid ratings entries after creating the placeholder users
+        # Insert valid ratings entries after creating the placeholder users_file
         valid_ratings_entries = invalid_ratings_df.to_dict(orient="records")
         upsert_data(
             db_session=db_session,

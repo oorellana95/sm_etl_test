@@ -5,7 +5,7 @@ from etl.process_file.interactions_file.file_data_processor_interactions import 
 from etl.process_file.recipes_file.file_data_processor_recipes import (
     FileDataProcessorRecipes,
 )
-from etl.process_file.users.file_data_processor_users import FileDataProcessorUsers
+from etl.process_file.users_file.file_data_processor_users import FileDataProcessorUsers
 from etl.services.logger import Logger
 from etl.services.sql_alchemy.database import create_database_session
 

@@ -10,7 +10,7 @@ from etl.process_file.recipes_file.ingredients.recipe_ingredient_model import (
 from etl.process_file.recipes_file.recipe_model import Recipe
 from etl.process_file.recipes_file.tags.recipe_tag_model import RecipeTag
 from etl.process_file.recipes_file.tags.tag_model import Tag
-from etl.process_file.users.user_repository import (
+from etl.process_file.users_file.user_repository import (
     fetch_user_ids,
     insert_placeholder_users_into_db,
 )
@@ -85,12 +85,12 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
     # Check if there are invalid recipes_file before proceeding with operations
     if not invalid_recipes_df.empty:
-        # Insert placeholder users and upsert data for invalid recipes_file
+        # Insert placeholder users_file and upsert data for invalid recipes_file
         insert_placeholder_users_into_db(
             db_session=db_session, new_entries=set(invalid_recipes_df["id_user"])
         )
 
-        # Insert valid recipe entries after creating the placeholder users
+        # Insert valid recipe entries after creating the placeholder users_file
         valid_recipe_entries = invalid_recipes_df.to_dict(orient="records")
         upsert_data(
             db_session=db_session, model=Recipe, new_entries=valid_recipe_entries
