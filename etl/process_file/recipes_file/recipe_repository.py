@@ -85,18 +85,20 @@ def _handle_recipes_with_invalid_id_user(db_session, recipes_df, existing_user_i
 
     # Check if there are invalid recipes_file before proceeding with operations
     if not invalid_recipes_df.empty:
-        # Insert placeholder users_file and upsert data for invalid recipes_file
+        # Insert placeholder users and upsert data for invalid recipes_file
+        new_placeholder_users = set(invalid_recipes_df["id_user"])
         insert_placeholder_users_into_db(
-            db_session=db_session, new_entries=set(invalid_recipes_df["id_user"])
+            db_session=db_session, new_entries=new_placeholder_users
         )
 
-        # Insert valid recipe entries after creating the placeholder users_file
+        # Insert valid recipe entries after creating the placeholder users
         valid_recipe_entries = invalid_recipes_df.to_dict(orient="records")
         upsert_data(
             db_session=db_session, model=Recipe, new_entries=valid_recipe_entries
         )
         Logger.warning(
-            message=f"A total of {len(invalid_recipes_df)} blueprint users have been created with the corresponding ids."
+            message=f"A total of {len(new_placeholder_users)} blueprint users have been created with the "
+                    f"corresponding ids."
         )
 
         # Save the DataFrame to a CSV file with a timestamped filename

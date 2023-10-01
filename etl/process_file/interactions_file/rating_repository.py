@@ -84,15 +84,16 @@ def _handle_ratings_with_invalid_id_user(db_session, ratings_df, existing_user_i
 
     # Check if there are invalid ratings before proceeding with operations
     if invalid_ratings_count:
-        # Insert placeholder users_file and upsert data for invalid ratings
+        # Insert placeholder users and upsert data for invalid ratings
+        new_placeholder_users = set(invalid_ratings_df["id_user"])
         insert_placeholder_users_into_db(
-            db_session=db_session, new_entries=set(invalid_ratings_df["id_user"])
+            db_session=db_session, new_entries=new_placeholder_users
         )
         Logger.warning(
-            message=f"A total of {invalid_ratings_count} blueprint users have been created with the corresponding ids."
+            message=f"A total of {len(new_placeholder_users)} blueprint users have been created with the corresponding ids."
         )
 
-        # Insert valid ratings entries after creating the placeholder users_file
+        # Insert valid ratings entries after creating the placeholder users
         valid_ratings_entries = invalid_ratings_df.to_dict(orient="records")
         upsert_data(
             db_session=db_session,
