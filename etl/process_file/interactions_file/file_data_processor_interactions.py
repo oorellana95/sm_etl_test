@@ -33,7 +33,7 @@ class FileDataProcessorInteractions(FileDataProcessor):
         ]
 
     def load_data(self):
-        """Load data from the file, creating and updating job_titles and users"""
+        """Load data from the file, creating and updating job_titles and users_file"""
         Logger.info(message=f"Loading ratings...")
         load_ratings(db_session=self.db_session, ratings_df=self.data)
         Logger.info(message=f"Ratings loaded successfully")

@@ -1,7 +1,7 @@
 """
 Tags repository module
 """
-from etl.process_file.users.job_title.job_title_model import JobTitle
+from etl.process_file.users_file.job_title.job_title_model import JobTitle
 from etl.services.sql_alchemy.repository_functions import (
     find_missing_entries,
     insert_missing_entries,

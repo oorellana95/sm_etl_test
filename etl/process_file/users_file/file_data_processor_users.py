@@ -5,8 +5,8 @@ Custom class inherited from the FileDataProcessor Class with the Interactions sp
 from etl.config import config
 from etl.process_file.column_checker import ColumnChecker
 from etl.process_file.file_data_processor import FileDataProcessor
-from etl.process_file.users.job_title.job_title_repository import load_job_titles
-from etl.process_file.users.user_repository import load_users
+from etl.process_file.users_file.job_title.job_title_repository import load_job_titles
+from etl.process_file.users_file.user_repository import load_users
 from etl.services.general_functions.validation import (
     contains_all_dates,
     contains_list_of_emails,
@@ -45,7 +45,7 @@ class FileDataProcessorUsers(FileDataProcessor):
         ]
 
     def load_data(self):
-        """Load data from the file, creating and updating job_titles and users"""
+        """Load data from the file, creating and updating job_titles and users_file"""
         # Load job titles
         Logger.info(message=f"Loading job titles...")
         load_job_titles(
@@ -53,7 +53,7 @@ class FileDataProcessorUsers(FileDataProcessor):
         )
         Logger.info(message=f"Job titles loaded successfully")
 
-        # Load users
-        Logger.info(message=f"Loading users...")
+        # Load users_file
+        Logger.info(message=f"Loading users_file...")
         load_users(db_session=self.db_session, users_df=self.data)
         Logger.info(message=f"Users loaded successfully")
